@@ -88,12 +88,16 @@ class player:
         self.army = []
         self.player_number = player_number
 
+    def print_resource(self):
+        print("[Your Asset: Wood - {} Food - {} Gold - {}]".format(self.wood,self.food,self.gold))
+        print()
+
     def check_resource(self):
         if self.wood>0 and self.food>0 and self.gold>0:
             return True
         else:
+            print("No resources to recruit any armies.")
             return False
-
 
     def purchase_unit(self):
         while True:
@@ -154,29 +158,47 @@ class player:
                 print("Sorry, invalid input. Try again.")
                 print()
 
+    def resolve_unit_name(self):
+        if unit == 'S':
+            return 'Spearman'
+        elif unit == 'A':
+            return 'Archer'
+        elif unit == 'K':
+            return 'Knight'
+        elif unit == 'T':
+            return 'Scout'
+
     def unit_placement(self):
         while True:
             placement_coords = input("You want to recruit a {}. Enter two integers as format ‘x y’ to place your army.\n".format(unit_name)).split(" ")
-            #checking for appropriate length
-            if len(placement_coords) != 2:
-                print("Sorry, invalid input. Try again.")
+
+            if placement_coords == 'DIS':
+                game.print_map
+
+            elif placement_coords == 'PRIS':
+                game.print_prices
+
             else:
-                print("good input")
-
-                placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
-
-                if placement_coords[0] == 1 and placement_coords[1] == 1:
-                    print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                #checking for appropriate length
+                if len(placement_coords) != 2:
+                    print("Sorry, invalid input. Try again.")
                     print()
-
                 else:
-                    if placement_coords[0] == 1 and placement_coords[1] == 0 or placement_coords[0] == 2 and placement_coords[1] == 1 or placement_coords[0] == 1 and placement_coords[1] == 2 or placement_coords[0] == 0 and placement_coords[1] == 1:
-                        print("good coord check")
-                        game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
-                        break
-                    else:
+                    placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
+
+                    #checking if on top of home base
+                    if placement_coords[0] == 1 and placement_coords[1] == 1:
                         print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
                         print()
+
+                    else:
+                        #checking if around home base
+                        if placement_coords[0] == 1 and placement_coords[1] == 0 or placement_coords[0] == 2 and placement_coords[1] == 1 or placement_coords[0] == 1 and placement_coords[1] == 2 or placement_coords[0] == 0 and placement_coords[1] == 1:
+                            game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
+                            break
+                        else:
+                            print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                            print()
 
     def home_sweep(self):
         if self.player_number == 1:
@@ -225,13 +247,26 @@ game.print_prices()
 print("(enter PRIS to display the price list)")
 print()
 
+player1.print_resource()
+
 while player1.check_resource() == True:
     if player1.home_sweep() == True:
+
         unit = player1.purchase_unit()
-        player1.unit_placement()
-        print ("You has recruited {}.".format(unit))
+        if unit == None:
+            break
+        else:
+            unit_name = player1.resolve_unit_name()
+            player1.unit_placement()
+
+            print("You has recruited {}.".format(unit))
+            print()
+
+            player1.print_resource()
 
         game.print_map()
+        print()
+
     else:
         break
 
@@ -239,5 +274,4 @@ game.print_map()
 
 print('END OF CODE')
 
-#hI
 
