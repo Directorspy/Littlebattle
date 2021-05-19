@@ -96,66 +96,87 @@ class player:
 
 
     def purchase_unit(self):
-        unit = input("Which type of army to recruit, (enter) ‘S’, ‘A’, ‘K’, or ‘T’? Enter ‘NO’ to end this stage.\n")
-        #buying a spearman
-        if unit == "S":
-            self.wood = self.wood - spearman.wood_cost
-            self.food = self.food - spearman.food_cost
-            self.gold = self.gold - spearman.gold_cost
-            return 'S'
+        while True:
+            unit = input("Which type of army to recruit, (enter) ‘S’, ‘A’, ‘K’, or ‘T’? Enter ‘NO’ to end this stage.\n")
+            #buying a spearman
+            if unit == "S":
+                self.wood = self.wood - spearman.wood_cost
+                self.food = self.food - spearman.food_cost
+                self.gold = self.gold - spearman.gold_cost
+                print()
+                return 'S'
 
-        #buying an archer
-        elif unit == "A":
-            self.wood = self.wood - archer.wood_cost
-            self.food = self.food - archer.food_cost
-            self.gold = self.gold - archer.gold_cost
+            #buying an archer
+            elif unit == "A":
+                self.wood = self.wood - archer.wood_cost
+                self.food = self.food - archer.food_cost
+                self.gold = self.gold - archer.gold_cost
+                print()
+                return 'A'
 
-        #buying a knight
-        elif unit == "K":
-            self.wood = self.wood - knight.wood_cost
-            self.food = self.food - knight.food_cost
-            self.gold = self.gold - knight.gold_cost
+            #buying a knight
+            elif unit == "K":
+                self.wood = self.wood - knight.wood_cost
+                self.food = self.food - knight.food_cost
+                self.gold = self.gold - knight.gold_cost
+                print()
+                return 'K'
 
-        #buying a scout
-        elif unit == "T":
-            self.wood = self.wood - scout.wood_cost
-            self.food = self.food - scout.food_cost
-            self.gold = self.gold - scout.gold_cost
+            #buying a scout
+            elif unit == "T":
+                self.wood = self.wood - scout.wood_cost
+                self.food = self.food - scout.food_cost
+                self.gold = self.gold - scout.gold_cost
+                print()
+                return 'T'
 
-        #skip buying 
-        elif unit == "NO":
-            return
+            #skip buying 
+            elif unit == "NO":
+                print()
+                return
 
-        #user asks to display map
-        elif unit == "DIS":
-            game.print_map()
-            print()
+            #user asks to display map
+            elif unit == "DIS":
+                game.print_map()
+                print()
 
-        #user asks to check prices
-        elif unit == "PRIS":
-            game.print_prices()
-            print()
+            #user asks to check prices
+            elif unit == "PRIS":
+                game.print_prices()
+                print()
 
-        #quitting the game
-        elif unit == "QUIT":
-            exit()
+            #quitting the game
+            elif unit == "QUIT":
+                exit()
 
-        #invalid inputs
-        else:
-            print("Sorry, invalid input. Try again.")
-            print()
+            #invalid inputs
+            else:
+                print("Sorry, invalid input. Try again.")
+                print()
 
     def unit_placement(self):
         while True:
             placement_coords = input("You want to recruit a {}. Enter two integers as format ‘x y’ to place your army.\n".format(unit_name)).split(" ")
-
-            placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
-
-            if placement_coords[0]<rows and placement_coords[1]<cols:
-                game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
-                break
+            #checking for appropriate length
+            if len(placement_coords) != 2:
+                print("Sorry, invalid input. Try again.")
             else:
-                break
+                print("good input")
+
+                placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
+
+                if placement_coords[0] == 1 and placement_coords[1] == 1:
+                    print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                    print()
+
+                else:
+                    if placement_coords[0] == 1 and placement_coords[1] == 0 or placement_coords[0] == 2 and placement_coords[1] == 1 or placement_coords[0] == 1 and placement_coords[1] == 2 or placement_coords[0] == 0 and placement_coords[1] == 1:
+                        print("good coord check")
+                        game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
+                        break
+                    else:
+                        print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                        print()
 
     def home_sweep(self):
         if self.player_number == 1:
@@ -188,7 +209,7 @@ knight = knight()
 scout = scout()
 
 #initialize players
-player1 = player(3,3,3,1)
+player1 = player(10,10,10,1)
 
 #running the game
 #opening
@@ -204,11 +225,15 @@ game.print_prices()
 print("(enter PRIS to display the price list)")
 print()
 
-if player1.check_resource() == True:
+while player1.check_resource() == True:
     if player1.home_sweep() == True:
         unit = player1.purchase_unit()
         player1.unit_placement()
         print ("You has recruited {}.".format(unit))
+
+        game.print_map()
+    else:
+        break
 
 game.print_map()
 
