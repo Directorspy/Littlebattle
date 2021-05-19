@@ -69,6 +69,7 @@ class little_battle:
         
 
     def print_prices(self):
+        print("Recruit Prices:")
         print("  Spearman (S) - 1W, 1F")
         print("  Archer (A) - 1W, 1G")
         print("  Knight (K) - 1F, 1G")
@@ -87,6 +88,7 @@ class player:
         self.gold = gold
         self.army = []
         self.player_number = player_number
+        self.home_position = home_bases[self.player_number-1]
 
     def print_resource(self):
         print("[Your Asset: Wood - {} Food - {} Gold - {}]".format(self.wood,self.food,self.gold))
@@ -109,7 +111,6 @@ class player:
                 self.gold = self.gold - spearman.gold_cost
                 print()
                 return 'S'
-
             #buying an archer
             elif unit == "A":
                 self.wood = self.wood - archer.wood_cost
@@ -117,7 +118,6 @@ class player:
                 self.gold = self.gold - archer.gold_cost
                 print()
                 return 'A'
-
             #buying a knight
             elif unit == "K":
                 self.wood = self.wood - knight.wood_cost
@@ -125,7 +125,6 @@ class player:
                 self.gold = self.gold - knight.gold_cost
                 print()
                 return 'K'
-
             #buying a scout
             elif unit == "T":
                 self.wood = self.wood - scout.wood_cost
@@ -133,26 +132,21 @@ class player:
                 self.gold = self.gold - scout.gold_cost
                 print()
                 return 'T'
-
             #skip buying 
             elif unit == "NO":
                 print()
                 return
-
             #user asks to display map
             elif unit == "DIS":
                 game.print_map()
                 print()
-
             #user asks to check prices
             elif unit == "PRIS":
                 game.print_prices()
                 print()
-
             #quitting the game
             elif unit == "QUIT":
                 exit()
-
             #invalid inputs
             else:
                 print("Sorry, invalid input. Try again.")
@@ -170,43 +164,52 @@ class player:
 
     def unit_placement(self):
         while True:
-            placement_coords = input("You want to recruit a {}. Enter two integers as format ‘x y’ to place your army.\n".format(unit_name)).split(" ")
+            placement_coords = input("You want to recruit a {}. Enter two integers as format ‘x y’ to place your army.\n".format(unit_name))
 
             if placement_coords == 'DIS':
-                game.print_map
-
+                game.print_map()
+                print()
             elif placement_coords == 'PRIS':
-                game.print_prices
-
+                game.print_prices()
+                print()
+            elif placement_coords == 'QUIT':
+                exit()
             else:
+                placement_coords = placement_coords.split(' ')
                 #checking for appropriate length
                 if len(placement_coords) != 2:
                     print("Sorry, invalid input. Try again.")
                     print()
                 else:
-                    placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
-
-                    #checking if on top of home base
-                    if placement_coords[0] == 1 and placement_coords[1] == 1:
-                        print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                    if placement_coords[0].isnumeric() == False or placement_coords[1].isnumeric() == False:
+                        print("Sorry, invalid input. Try again.")
                         print()
-
                     else:
-                        #checking if around home base
-                        if placement_coords[0] == 1 and placement_coords[1] == 0 or placement_coords[0] == 2 and placement_coords[1] == 1 or placement_coords[0] == 1 and placement_coords[1] == 2 or placement_coords[0] == 0 and placement_coords[1] == 1:
-                            game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
-                            break
-                        else:
+                        placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
+
+                        #checking if on top of home base
+                        if placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]:
                             print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
                             print()
+                        elif game.map[placement_coords[0]][placement_coords[1]] != '  ':
+                            print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                            print()
+                        else:
+                            #checking if around home base
+                            if placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]-1 or placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]+1 or placement_coords[0] == self.home_position[0]-1 and placement_coords[1] == self.home_position[1] or placement_coords[0] == self.home_position[0]+1 and placement_coords[1] == self.home_position[1]:
+                                game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
+                                break
+                            else:
+                                print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
+                                print()
 
     def home_sweep(self):
-        if self.player_number == 1:
-            if game.map[1][0] == "  " or game.map[2][1] == "  " or game.map[1][2] == "  " or game.map[0][1] == "  ":
-                return True
-            else:
-                print("No place to recruit new armies.")
-                return False
+        if game.map[self.home_position[0]][self.home_position[1]-1] == "  " or game.map[self.home_position[0]][self.home_position[1]+1] == "  " or game.map[self.home_position[0]-1][self.home_position[1]] == "  " or game.map[self.home_position[0]+1][self.home_position[1]] == "  ":
+            return True
+        else:
+            print("No place to recruit new armies.")
+            print()
+            return False
 
 
 
@@ -218,10 +221,12 @@ unit = ''
 unit_name = ''
 
 game.map[1][1] = "H1"
-home_1 = [1],[1]
+home_1 = 1,1
 
 game.map[rows-2][cols-2] = "H2"
-home_2 = [rows-2],[cols-2]
+home_2 = rows-2,cols-2
+
+home_bases = [home_1,home_2]
 
 
 #initialize units
@@ -232,12 +237,13 @@ scout = scout()
 
 #initialize players
 player1 = player(10,10,10,1)
+player2 = player(10,10,10,2)
 
 #running the game
 #opening
 print("Game Started: Little Battle! (enter QUIT to quit the game)")
 print()
-print(home_2)
+print(player2.home_position)
 
 game.print_map()
 print("(enter DIS to display the map)")
@@ -259,7 +265,8 @@ while player1.check_resource() == True:
             unit_name = player1.resolve_unit_name()
             player1.unit_placement()
 
-            print("You has recruited {}.".format(unit))
+            print()
+            print("You has recruited a {}.".format(unit_name))
             print()
 
             player1.print_resource()
@@ -269,8 +276,6 @@ while player1.check_resource() == True:
 
     else:
         break
-
-game.print_map()
 
 print('END OF CODE')
 
