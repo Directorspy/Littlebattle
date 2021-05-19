@@ -75,10 +75,9 @@ class little_battle:
         print("  Knight (K) - 1F, 1G")
         print("  Scout (T) - 1W, 1F, 1G")
 
-class home_base:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
+    def print_year(self):
+        print("-Year {}-".format(year+1))
+        print()
 
 #player info
 class player:
@@ -87,11 +86,19 @@ class player:
         self.food = food
         self.gold = gold
         self.army = []
+        self.spearman = []
+        self.archer = []
+        self.knight = []
+        self.scout = []
         self.player_number = player_number
         self.home_position = home_bases[self.player_number-1]
 
     def print_resource(self):
         print("[Your Asset: Wood - {} Food - {} Gold - {}]".format(self.wood,self.food,self.gold))
+        print()
+
+    def print_recruit_turn(self):
+        print("+++Player {}'s Stage: Recruit Armies+++".format(self.player_number))
         print()
 
     def check_resource(self):
@@ -198,6 +205,15 @@ class player:
                             #checking if around home base
                             if placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]-1 or placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]+1 or placement_coords[0] == self.home_position[0]-1 and placement_coords[1] == self.home_position[1] or placement_coords[0] == self.home_position[0]+1 and placement_coords[1] == self.home_position[1]:
                                 game.map[placement_coords[0]][placement_coords[1]] = "{}{}".format(unit,self.player_number)
+                                self.army.append(unit)
+                                if unit == 'S':
+                                    self.spearman.append((placement_coords[0],placement_coords[1]))
+                                elif unit == 'A':
+                                    self.archer.append((placement_coords[0],placement_coords[1]))
+                                elif unit == 'K':
+                                    self.knight.append((placement_coords[0],placement_coords[1]))
+                                elif unit == 'T':
+                                    self.scout.append((placement_coords[0],placement_coords[1]))
                                 break
                             else:
                                 print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
@@ -228,6 +244,7 @@ home_2 = rows-2,cols-2
 
 home_bases = [home_1,home_2]
 
+year = 616
 
 #initialize units
 spearman = spearman()
@@ -253,6 +270,9 @@ game.print_prices()
 print("(enter PRIS to display the price list)")
 print()
 
+game.print_year()
+
+player1.print_recruit_turn()
 player1.print_resource()
 
 while player1.check_resource() == True:
@@ -277,6 +297,11 @@ while player1.check_resource() == True:
     else:
         break
 
+print(player1.army)
+print(player1.spearman)
+print(player1.archer)
+print(player1.knight)
+print(player1.scout)
 print('END OF CODE')
 
 
