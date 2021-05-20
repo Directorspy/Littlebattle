@@ -95,7 +95,6 @@ class player:
 
     def print_resource(self):
         print("[Your Asset: Wood - {} Food - {} Gold - {}]".format(self.wood,self.food,self.gold))
-        print()
 
     def print_recruit_turn(self):
         print("+++Player {}'s Stage: Recruit Armies+++".format(self.player_number))
@@ -110,54 +109,48 @@ class player:
 
     def purchase_unit(self):
         while True:
+            print()
             unit = input("Which type of army to recruit, (enter) ‘S’, ‘A’, ‘K’, or ‘T’? Enter ‘NO’ to end this stage.\n")
+
             #buying a spearman
             if unit == "S":
                 self.wood = self.wood - spearman.wood_cost
                 self.food = self.food - spearman.food_cost
                 self.gold = self.gold - spearman.gold_cost
-                print()
                 return 'S'
             #buying an archer
             elif unit == "A":
                 self.wood = self.wood - archer.wood_cost
                 self.food = self.food - archer.food_cost
                 self.gold = self.gold - archer.gold_cost
-                print()
                 return 'A'
             #buying a knight
             elif unit == "K":
                 self.wood = self.wood - knight.wood_cost
                 self.food = self.food - knight.food_cost
                 self.gold = self.gold - knight.gold_cost
-                print()
                 return 'K'
             #buying a scout
             elif unit == "T":
                 self.wood = self.wood - scout.wood_cost
                 self.food = self.food - scout.food_cost
                 self.gold = self.gold - scout.gold_cost
-                print()
                 return 'T'
             #skip buying 
             elif unit == "NO":
-                print()
                 return
             #user asks to display map
             elif unit == "DIS":
                 game.print_map()
-                print()
             #user asks to check prices
             elif unit == "PRIS":
                 game.print_prices()
-                print()
             #quitting the game
             elif unit == "QUIT":
                 exit()
             #invalid inputs
             else:
                 print("Sorry, invalid input. Try again.")
-                print()
 
     def resolve_unit_name(self):
         if unit == 'S':
@@ -171,6 +164,7 @@ class player:
 
     def unit_placement(self):
         while True:
+            print()
             placement_coords = input("You want to recruit a {}. Enter two integers as format ‘x y’ to place your army.\n".format(unit_name))
 
             if placement_coords == 'DIS':
@@ -188,6 +182,7 @@ class player:
                     print("Sorry, invalid input. Try again.")
                     print()
                 else:
+                    #checking for integers
                     if placement_coords[0].isnumeric() == False or placement_coords[1].isnumeric() == False:
                         print("Sorry, invalid input. Try again.")
                         print()
@@ -220,11 +215,11 @@ class player:
                                 print()
 
     def home_sweep(self):
+        #checking if one of 4 positions around home base are empty
         if game.map[self.home_position[0]][self.home_position[1]-1] == "  " or game.map[self.home_position[0]][self.home_position[1]+1] == "  " or game.map[self.home_position[0]-1][self.home_position[1]] == "  " or game.map[self.home_position[0]+1][self.home_position[1]] == "  ":
             return True
         else:
             print("No place to recruit new armies.")
-            print()
             return False
 
     def print_army_to_move(self):
@@ -253,6 +248,13 @@ class player:
             for i in range(len(self.scout)-1):
                 print(' {},'.format(self.scout[i]),end='')
             print(' {}'.format(self.scout[-1]))
+
+        print()
+
+    def print_move_turn(self):
+        print()
+        print("===Player {}'s Stage: Move Armies===".format(self.player_number))
+        print()
 
         
                 
@@ -292,7 +294,6 @@ player2 = player(10,10,10,2)
 #opening
 print("Game Started: Little Battle! (enter QUIT to quit the game)")
 print()
-print(player2.home_position)
 
 game.print_map()
 print("(enter DIS to display the map)")
@@ -317,17 +318,17 @@ while player1.check_resource() == True:
             unit_name = player1.resolve_unit_name()
             player1.unit_placement()
 
-            print()
             print("You has recruited a {}.".format(unit_name))
             print()
 
             player1.print_resource()
 
         game.print_map()
-        print()
 
     else:
         break
+
+player1.print_move_turn()
 player1.print_army_to_move()
 
 print('END OF CODE')
