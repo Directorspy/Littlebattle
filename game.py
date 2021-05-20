@@ -85,13 +85,14 @@ class player:
         self.wood = wood
         self.food = food
         self.gold = gold
-        self.army = []
-        self.spearman = []
-        self.archer = []
-        self.knight = []
-        self.scout = []
-        self.player_number = player_number
-        self.home_position = home_bases[self.player_number-1]
+        self.player_number_input = player_number
+        self.army = player_armies[self.player_number_input-1]
+        self.spearman = player_spearmans[self.player_number_input-1]
+        self.archer = player_archers[self.player_number_input-1]
+        self.knight = player_knights[self.player_number_input-1]
+        self.scout = player_scouts[self.player_number_input-1]
+        self.player_number = players[self.player_number_input-1]
+        self.home_position = home_bases[self.player_number_input-1]
 
     def print_resource(self):
         print("[Your Asset: Wood - {} Food - {} Gold - {}]".format(self.wood,self.food,self.gold))
@@ -298,19 +299,100 @@ class player:
                                     print("NOT AD, TRY AGAIN")
                             else:
                                 if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
-                                    print("pass")
                                     return (current_coords,desired_coords)
                                 else:
                                     print("NOT AD, Try again")
+    
+    def spearman_output(self):
+        index = self.spearman.index(current_coords)
+        del self.spearman[index]
+        game.map[current_coords[0]][current_coords[1]] = '  '
+        game.map[desired_coords[0]][desired_coords[1]] = 'S{}'.format(self.player_number)
+        self.spearman.insert(index, desired_coords)        
         
-                
+    def unit_movement_output_general(self):
+        tile = game.map[desired_coords[0]][desired_coords[1]]
+        if tile == '~~':
+            print("lost the army <Spearman/Archer/Knight/Scout> due to your command!")
+        elif tile == 'GG':
+            self.gold += 2
+            print("Good. We collected 2 Gold")
+        elif tile == 'FF':
+            self.food += 2
+            print("Good. We collected 2 Food")
+        elif tile == 'WW':
+            self.wood += 2
+            print("Good. We collected 2 Wood")
+        else:
+            if current_coords in self.spearman:
+                opponent = players[self.player_number-1]
+                if 'K' in tile:
+                    #removing the knight from opponent's army
+                    knight_list = player_knights[opponent]
+                    knight_list.remove(desired_coords)
+                    army_list = player_armies[opponent]
+                    del army_list[0]
+                    #put the spearman on the board
+                    self.spearman_output()
+                else:
+                    self.spearman_output()
+
+def player1_recruit_units():
+    player1.print_recruit_turn()
+    player1.print_resource()
+
+    while player1.check_resource() == True:
+        if player1.home_sweep() == True:
+
+            unit = player1.purchase_unit()
+            if unit == None:
+                break
+            else:
+                unit_name = player1.resolve_unit_name()
+                player1.unit_placement()
+
+                print("You has recruited a {}.".format(unit_name))
+                print()
+
+                player1.print_resource()
+
+            game.print_map()
+
+        else:
+            break
+
+def player2_recruit_units():
+    player2.print_recruit_turn()
+    player2.print_resource()
+
+    while player2.check_resource() == True:
+        if player2.home_sweep() == True:
+
+            unit = player1.purchase_unit()
+            if unit == None:
+                break
+            else:
+                unit_name = player2.resolve_unit_name()
+                player2.unit_placement()
+
+                print("You has recruited a {}.".format(unit_name))
+                print()
+
+                player2.print_resource()
+
+            game.print_map()
+
+        else:
+            break
+
+
 
 
 
 
 
 #initialize game
-cols, rows = (10,10)
+cols, rows = (5,5)
 end = False
 game = little_battle()
 unit = ''
@@ -335,7 +417,29 @@ knight = knight()
 scout = scout()
 
 #initialize players
+players = [1,2]
+
+player1_army = []
+player1_spearman = []
+player1_archer = []
+player1_knight = []
+player1_scout = []
+
+player2_army = []
+player2_spearman = []
+player2_archer = []
+player2_knight = []
+player2_scout = []
+
+player_armies = [player1_army, player2_army]
+player_spearmans = [player1_spearman, player2_spearman]
+player_archers = [player1_archer, player2_archer]
+player_knights = [player1_knight, player2_knight]
+player_scouts = [player1_scout, player2_scout]
+
+
 player1 = player(10,10,10,1)
+
 player2 = player(10,10,10,2)
 
 #running the game
@@ -376,17 +480,46 @@ while player1.check_resource() == True:
     else:
         break
 
-player1.print_move_turn()
-player1.print_army_to_move()
-while player1.check_armies() == True:
-    coords = player1.unit_movement_input()
-    if coords == 'None':
-        break
-    else:
-        current_coords = coords[0]
-        desired_coords = coords[1]
-    break
+player2.print_recruit_turn()
+player2.print_resource()
 
-print(current_coords)
-print(desired_coords)
+while player2.check_resource() == True:
+    if player2.home_sweep() == True:
+
+        unit = player1.purchase_unit()
+        if unit == None:
+            break
+        else:
+            unit_name = player2.resolve_unit_name()
+            player2.unit_placement()
+
+            print("You has recruited a {}.".format(unit_name))
+            print()
+
+            player2.print_resource()
+
+        game.print_map()
+
+    else:
+        break
+
+while True:
+    player1.print_move_turn()
+    player1.print_army_to_move()
+    while player1.check_armies() == True:
+        coords = player1.unit_movement_input()
+        if coords == 'None':
+            break
+        else:
+            current_coords = coords[0]
+            desired_coords = coords[1]
+        break
+    print(player1.spearman)
+
+    print(current_coords)
+    print(desired_coords)
+    player1.unit_movement_output_general()
+    game.print_map()
+    print(player2_knight)
+
 print('END OF CODE')
