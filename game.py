@@ -230,30 +230,29 @@ class player:
     def print_army_to_move(self):
         print("Armies to Move:")
 
-        army_reducable = []
-        [army_reducable.append(x) for x in self.army if x not in army_reducable]
+        if 'S' in self.army:
+            print("  Spearman:",end='')
+            for i in range(len(self.spearman)-1):
+                print(' {},'.format(self.spearman[i]),end='')
+            print(' {}'.format(self.spearman[-1]))
 
-        for j in range(len(army_reducable)):
-            if army_reducable[j] == 'S':
-                print("  Spearman:",end='')
-                for i in range(len(self.spearman)-1):
-                    print(' {},'.format(self.spearman[i]),end='')
-                print(' {}'.format(self.spearman[-1]))
-            elif army_reducable[j] == 'A':
-                print("  Archer:",end='')
-                for i in range(len(self.archer)-1):
-                    print(' {},'.format(self.archer[i]),end='')
-                print(' {}'.format(self.archer[-1]))                   
-            elif army_reducable[j] == 'K':
-                print("  Knight:",end='')
-                for i in range(len(self.knight)-1):
-                    print(' {},'.format(self.knight[i]),end='')
-                print(' {}'.format(self.knight[-1]))
-            elif army_reducable[j] == 'S':
-                print("  Scout:",end='')
-                for i in range(len(self.scout)-1):
-                    print(' {},'.format(self.scout[i]),end='')
-                print(' {}'.format(self.scout[-1]))
+        if 'A' in self.army:
+            print("  Archer:",end='')
+            for i in range(len(self.archer)-1):
+                print(' {},'.format(self.archer[i]),end='')
+            print(' {}'.format(self.archer[-1]))   
+   
+        if 'K' in self.army:
+            print("  Knight:",end='')
+            for i in range(len(self.knight)-1):
+                print(' {},'.format(self.knight[i]),end='')
+            print(' {}'.format(self.knight[-1]))            
+
+        if 'T' in self.army:
+            print("  Scout:",end='')
+            for i in range(len(self.scout)-1):
+                print(' {},'.format(self.scout[i]),end='')
+            print(' {}'.format(self.scout[-1]))
 
         
                 
@@ -331,8 +330,6 @@ while player1.check_resource() == True:
         break
 player1.print_army_to_move()
 
-print(player1.army)
-print(set(player1.army))
 print('END OF CODE')
 
 
