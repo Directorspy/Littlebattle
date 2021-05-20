@@ -180,22 +180,18 @@ class player:
                 #checking for appropriate length
                 if len(placement_coords) != 2:
                     print("Sorry, invalid input. Try again.")
-                    print()
                 else:
                     #checking for integers
                     if placement_coords[0].isnumeric() == False or placement_coords[1].isnumeric() == False:
                         print("Sorry, invalid input. Try again.")
-                        print()
                     else:
                         placement_coords[0],placement_coords[1] = int(placement_coords[0]), int(placement_coords[1])
 
-                        #checking if on top of home base
-                        if placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]:
+                        #checking if on top of home base and if in bounds
+                        if placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1] or placement_coords[0] not in range(rows) or placement_coords[1] not in range(cols):
                             print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
-                            print()
                         elif game.map[placement_coords[0]][placement_coords[1]] != '  ':
                             print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
-                            print()
                         else:
                             #checking if around home base
                             if placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]-1 or placement_coords[0] == self.home_position[0] and placement_coords[1] == self.home_position[1]+1 or placement_coords[0] == self.home_position[0]-1 and placement_coords[1] == self.home_position[1] or placement_coords[0] == self.home_position[0]+1 and placement_coords[1] == self.home_position[1]:
@@ -212,7 +208,6 @@ class player:
                                 break
                             else:
                                 print("You must place your newly recruited unit in an unoccupied position next to your home base. Try again.")
-                                print()
 
     def home_sweep(self):
         #checking if one of 4 positions around home base are empty
@@ -256,6 +251,57 @@ class player:
         print("===Player {}'s Stage: Move Armies===".format(self.player_number))
         print()
 
+    def check_armies(self):
+        if len(self.army) != 0:
+            return True
+        else:
+            print("No Army to Move: next turn.")
+            print()
+            return False
+
+    def unit_movement_input(self):
+        while True:
+            print()
+            movement_input = input("Enter four integers as a format ‘x0 y0 x1 y1’ to represent move unit from (x0, y0) to (x1, y1) or ‘NO’ to end this turn.\n")
+            if movement_input == 'NO':
+                return
+            elif movement_input == 'DIS':
+                game.print_map()
+                print()
+            elif movement_input == 'PRIS':
+                game.print_prices()
+                print()
+            elif movement_input == 'QUIT':
+                exit()
+            else:
+                movement_input = movement_input.split(' ')
+                #checking if length is 4
+                if len(movement_input) != 4:
+                    print("Invalid move. Try again.")
+                else:
+                    #checking for integers
+                    if movement_input[0].isnumeric() == False or movement_input[1].isnumeric() == False or movement_input[2].isnumeric() == False or movement_input[3].isnumeric() == False:
+                        print("Invalid move. Try again.")
+                    else:
+                        movement_input[0],movement_input[1],movement_input[2],movement_input[3] = int(movement_input[0]),int(movement_input[1]),int(movement_input[2]),int(movement_input[3])
+                        #checking if in bounds
+                        if movement_input[0] not in range(rows) or movement_input[1] not in range(cols) or movement_input[2] not in range(rows) or movement_input[3] not in range(cols):
+                            print("Invalid. Try again.")
+                        else:
+                            current_coords = (movement_input[0],movement_input[1])
+                            desired_coords = (movement_input[2],movement_input[3])
+                            if current_coords in self.scout:
+                                if desired_coords[0] == current_coords[0]+2 or desired_coords[0] == current_coords[0]-2 or desired_coords[1] == current_coords[1]+2 or desired_coords[1] == current_coords[1]-2:
+                                    print("pass")
+                                    break
+                                else:
+                                    print("NOT AD, TRY AGAIN")
+                            else:
+                                if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
+                                    print("pass")
+                                    return (current_coords,desired_coords)
+                                else:
+                                    print("NOT AD, Try again")
         
                 
 
@@ -269,6 +315,8 @@ end = False
 game = little_battle()
 unit = ''
 unit_name = ''
+current_coords = 0,0
+desired_coords = 0,0
 
 game.map[1][1] = "H1"
 home_1 = 1,1
@@ -330,7 +378,15 @@ while player1.check_resource() == True:
 
 player1.print_move_turn()
 player1.print_army_to_move()
+while player1.check_armies() == True:
+    coords = player1.unit_movement_input()
+    if coords == 'None':
+        break
+    else:
+        current_coords = coords[0]
+        desired_coords = coords[1]
+    break
 
+print(current_coords)
+print(desired_coords)
 print('END OF CODE')
-
-
