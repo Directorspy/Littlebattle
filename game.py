@@ -307,13 +307,15 @@ class player:
                             desired_coords = (movement_input[2],movement_input[3])
                             if current_coords in self.spearman or current_coords in self.archer or current_coords in self.knight or current_coords in self.scout:
                                 if current_coords in self.scout:
-                                    if desired_coords[0] == current_coords[0]+2 or desired_coords[0] == current_coords[0]-2 or desired_coords[1] == current_coords[1]+2 or desired_coords[1] == current_coords[1]-2:
-                                        break
+                                    if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
+                                        return(current_coords,desired_coords)
+                                    elif desired_coords[0] == current_coords[0]+2 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-2 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+2 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-2:
+                                        return(current_coords,desired_coords)
                                     else:
                                         print("NOT AD, TRY AGAIN")
                                 else:
                                     if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
-                                        return (current_coords,desired_coords)
+                                        return(current_coords,desired_coords)
                                     else:
                                         print("NOT AD, Try again")
                             else:
@@ -427,17 +429,37 @@ class player:
                 self.self_archer_death()
             elif current_coords in self.knight:
                 self.self_knight_death()
-            elif current_coords in self.scout:
-                self.self_scout_death()
+
         elif tile == 'GG':
             self.gold += 2
+            if current_coords in self.spearman:
+                self.spearman_output()
+            elif current_coords in self.archer:
+                self.archer_output()
+            elif current_coords in self.knight:
+                self.knight_output()
             print("Good. We collected 2 Gold")
+
         elif tile == 'FF':
             self.food += 2
+            if current_coords in self.spearman:
+                self.spearman_output()
+            elif current_coords in self.archer:
+                self.archer_output()
+            elif current_coords in self.knight:
+                self.knight_output()
             print("Good. We collected 2 Food")
+
         elif tile == 'WW':
             self.wood += 2
+            if current_coords in self.spearman:
+                self.spearman_output()
+            elif current_coords in self.archer:
+                self.archer_output()
+            elif current_coords in self.knight:
+                self.knight_output()
             print("Good. We collected 2 Wood")
+            
         else:
             if current_coords in self.spearman:
                 if 'K' in tile:
