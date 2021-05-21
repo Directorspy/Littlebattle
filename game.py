@@ -86,11 +86,21 @@ class player:
         self.food = food
         self.gold = gold
         self.player_number_input = player_number
+
         self.army = player_armies[self.player_number_input-1]
+
         self.spearman = player_spearmans[self.player_number_input-1]
+        self.spearman_post = []
+
         self.archer = player_archers[self.player_number_input-1]
+        self.archer_post = []
+
         self.knight = player_knights[self.player_number_input-1]
+        self.knight_post = []
+
         self.scout = player_scouts[self.player_number_input-1]
+        self.scout_post = []
+
         self.player_number = players[self.player_number_input-1]
         self.home_position = home_bases[self.player_number_input-1]
 
@@ -222,28 +232,32 @@ class player:
         print("Armies to Move:")
 
         if 'S' in self.army:
-            print("  Spearman:",end='')
-            for i in range(len(self.spearman)-1):
-                print(' {},'.format(self.spearman[i]),end='')
-            print(' {}'.format(self.spearman[-1]))
+            if len(self.spearman) != 0:
+                print("  Spearman:",end='')
+                for i in range(len(self.spearman)-1):
+                    print(' {},'.format(self.spearman[i]),end='')
+                print(' {}'.format(self.spearman[-1]))
 
         if 'A' in self.army:
-            print("  Archer:",end='')
-            for i in range(len(self.archer)-1):
-                print(' {},'.format(self.archer[i]),end='')
-            print(' {}'.format(self.archer[-1]))   
+            if len(self.archer) != 0:
+                print("  Archer:",end='')
+                for i in range(len(self.archer)-1):
+                    print(' {},'.format(self.archer[i]),end='')
+                print(' {}'.format(self.archer[-1]))   
    
         if 'K' in self.army:
-            print("  Knight:",end='')
-            for i in range(len(self.knight)-1):
-                print(' {},'.format(self.knight[i]),end='')
-            print(' {}'.format(self.knight[-1]))            
+            if len(self.knight) != 0:
+                print("  Knight:",end='')
+                for i in range(len(self.knight)-1):
+                    print(' {},'.format(self.knight[i]),end='')
+                print(' {}'.format(self.knight[-1]))            
 
         if 'T' in self.army:
-            print("  Scout:",end='')
-            for i in range(len(self.scout)-1):
-                print(' {},'.format(self.scout[i]),end='')
-            print(' {}'.format(self.scout[-1]))
+            if len(self.scout) != 0:
+                print("  Scout:",end='')
+                for i in range(len(self.scout)-1):
+                    print(' {},'.format(self.scout[i]),end='')
+                print(' {}'.format(self.scout[-1]))
 
         print()
 
@@ -253,12 +267,12 @@ class player:
         print()
 
     def check_armies(self):
-        if len(self.army) != 0:
-            return True
-        else:
+        if len(self.spearman) == 0 and len(self.archer) == 0 and len(self.knight) == 0 and len(self.scout) == 0:
             print("No Army to Move: next turn.")
             print()
             return False
+        else:
+            return True
 
     def unit_movement_input(self):
         while True:
@@ -291,29 +305,130 @@ class player:
                         else:
                             current_coords = (movement_input[0],movement_input[1])
                             desired_coords = (movement_input[2],movement_input[3])
-                            if current_coords in self.scout:
-                                if desired_coords[0] == current_coords[0]+2 or desired_coords[0] == current_coords[0]-2 or desired_coords[1] == current_coords[1]+2 or desired_coords[1] == current_coords[1]-2:
-                                    print("pass")
-                                    break
+                            if current_coords in self.spearman or current_coords in self.archer or current_coords in self.knight or current_coords in self.scout:
+                                if current_coords in self.scout:
+                                    if desired_coords[0] == current_coords[0]+2 or desired_coords[0] == current_coords[0]-2 or desired_coords[1] == current_coords[1]+2 or desired_coords[1] == current_coords[1]-2:
+                                        break
+                                    else:
+                                        print("NOT AD, TRY AGAIN")
                                 else:
-                                    print("NOT AD, TRY AGAIN")
+                                    if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
+                                        return (current_coords,desired_coords)
+                                    else:
+                                        print("NOT AD, Try again")
                             else:
-                                if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
-                                    return (current_coords,desired_coords)
-                                else:
-                                    print("NOT AD, Try again")
+                                print("Invalid move. Try again")
     
     def spearman_output(self):
         index = self.spearman.index(current_coords)
         del self.spearman[index]
         game.map[current_coords[0]][current_coords[1]] = '  '
         game.map[desired_coords[0]][desired_coords[1]] = 'S{}'.format(self.player_number)
-        self.spearman.insert(index, desired_coords)        
+        self.spearman_post.insert(index, desired_coords)
+
+    def archer_output(self):
+        index = self.archer.index(current_coords)
+        del self.archer[index]
+        print(self.archer)
+        game.map[current_coords[0]][current_coords[1]] = '  '
+        game.map[desired_coords[0]][desired_coords[1]] = 'A{}'.format(self.player_number)
+        self.archer_post.insert(index, desired_coords)
+        print(self.archer_post)
+
+    def knight_output(self):
+        index = self.knight.index(current_coords)
+        del self.knight[index]
+        game.map[current_coords[0]][current_coords[1]] = '  '
+        game.map[desired_coords[0]][desired_coords[1]] = 'K{}'.format(self.player_number)
+        self.knight_post.insert(index, desired_coords)
+
+    def opponent_knight_death(self):
+        opponent = players[self.player_number-1]
+        knight_list = player_knights[opponent]
+        knight_list.remove(desired_coords)
+        army_list = player_armies[opponent]
+        game.map[desired_coords[0]][desired_coords[1]] = '  '
+        del army_list[0] 
+
+    def opponent_archer_death(self):
+        opponent = players[self.player_number-1]
+        archer_list = player_archers[opponent]
+        archer_list.remove(desired_coords)
+        army_list = player_armies[opponent]
+        game.map[desired_coords[0]][desired_coords[1]] = '  '
+        del army_list[0]
+
+    def opponent_spearman_death(self):
+        opponent = players[self.player_number-1]
+        spearman_list = player_spearmans[opponent]
+        spearman_list.remove(desired_coords)
+        army_list = player_armies[opponent]
+        game.map[desired_coords[0]][desired_coords[1]] = '  '
+        del army_list[0]
+
+    def opponent_scout_death(self):
+        opponent = players[self.player_number-1]
+        scout_list = player_scouts[opponent]
+        scout_list.remove(desired_coords)
+        army_list = player_armies[opponent]
+        game.map[desired_coords[0]][desired_coords[1]] = '  '
+        del army_list[0]              
+
+    def self_spearman_death(self):
+        index = self.spearman.index(current_coords)
+        del self.spearman[index]
+        del self.spearman_post[index]
+        game.map[current_coords[0]][current_coords[1]] = '  '
+
+    def self_archer_death(self):
+        index = self.archer.index(current_coords)
+        del self.archer[index]
+        game.map[current_coords[0]][current_coords[1]] = '  '
+
+    def self_knight_death(self):
+        index = self.knight.index(current_coords)
+        del self.knight[index]
+        game.map[current_coords[0]][current_coords[1]] = '  '
+
+    def self_scout_death(self):
+        pass
+
+    def resolve_coordinates(self):
+        if coords == None:
+            self.spearman = self.spearman_post.copy()  
+            self.archer = self.archer_post.copy()
+            self.knight = self.knight_post.copy()
+        else:
+            self.spearman = self.spearman_post.copy()  
+            self.archer = self.archer_post.copy()
+            self.knight = self.knight_post.copy()
+            self.spearman_post = []
+            self.archer_post = []
+            self.knight_post = []
+
+    def resolve_unit_from_coordinates(self):
+        if current_coords in self.spearman:
+            return "Spearman"
+        elif current_coords in self.archer:
+            return "Archer"
+        elif current_coords in self.knight:
+            return "Knight"
+        elif current_coords in self.scout:
+            return 'Scout'
         
     def unit_movement_output_general(self):
         tile = game.map[desired_coords[0]][desired_coords[1]]
+        print("You have moved {} from {} to {}.".format(unit_name,current_coords,desired_coords))
         if tile == '~~':
-            print("lost the army <Spearman/Archer/Knight/Scout> due to your command!")
+            print("We lost the army {} due to your command!".format(unit_name))
+            if current_coords in self.spearman:
+                self.self_spearman_death()
+            elif current_coords in self.archer:
+                self.self_archer_death()
+            elif current_coords in self.knight:
+                self.self_knight_death()
+            elif current_coords in self.scout:
+                self.self_scout_death()
         elif tile == 'GG':
             self.gold += 2
             print("Good. We collected 2 Gold")
@@ -325,17 +440,61 @@ class player:
             print("Good. We collected 2 Wood")
         else:
             if current_coords in self.spearman:
-                opponent = players[self.player_number-1]
                 if 'K' in tile:
-                    #removing the knight from opponent's army
-                    knight_list = player_knights[opponent]
-                    knight_list.remove(desired_coords)
-                    army_list = player_armies[opponent]
-                    del army_list[0]
-                    #put the spearman on the board
+                    print("Great! We defeated the enemy Knight!")
+                    self.opponent_knight_death()
                     self.spearman_output()
+                elif 'T' in tile:
+                    print("Great! We defeated the enemy Scout!")   
+                    self.opponent_scout_death()
+                    self.spearman_output()
+                elif 'A' in tile:
+                    print("We lost the army Spearman due to your command!")
+                    self.self_spearman_death()
+                elif 'S' in tile:
+                    print("We destroyed the enemy Spearman with massive loss!")
+                    self.opponent_spearman_death()
+                    self.self_spearman_death()
                 else:
                     self.spearman_output()
+            elif current_coords in self.archer:
+                if 'S' in tile:
+                    print("Great! We defeated the enemy Spearman!")
+                    self.opponent_spearman_death()
+                    self.archer_output()
+                elif 'T' in tile:
+                    print("Great! We defeated the enemy Scout!")
+                    self.opponent_scout_death()
+                    self.archer_output()
+                elif 'K' in tile:
+                    print("We lost the army Spearman due to your command!")
+                    self.self_archer_death()
+                elif 'A' in tile:
+                    print("We destroyed the enemy Archer with massive loss!")
+                    self.opponent_archer_death()
+                    self.self_archer_death()
+                else:
+                    self.archer_output()
+            elif current_coords in self.knight:
+                if 'A' in tile:
+                    print("Great! We defeated the enemy Archer!")
+                    self.opponent_archer_death()
+                    self.knight_output()
+                elif 'T' in tile:
+                    print("Great! We defeated the enemy Scout!")
+                    self.opponent_scout_death()
+                    self.knight_output()
+                elif 'S' in tile:
+                    print("We lost the army Knight due to your command!")
+                    self.self_knight_death()
+                elif 'K' in tile:
+                    print("We destroyed the enemy Knight with massive loss!")
+                    self.opponent_knight_death()
+                    self.self_knight_death()
+                else:
+                    self.knight_output()
+            else:
+                pass
 
 def player1_recruit_units():
     player1.print_recruit_turn()
@@ -503,23 +662,22 @@ while player2.check_resource() == True:
     else:
         break
 
-while True:
+while player1.check_armies() == True:
     player1.print_move_turn()
-    player1.print_army_to_move()
+
     while player1.check_armies() == True:
+        player1.print_army_to_move()
         coords = player1.unit_movement_input()
-        if coords == 'None':
+        if coords == None:
             break
         else:
             current_coords = coords[0]
             desired_coords = coords[1]
-        break
-    print(player1.spearman)
+            unit_name = player1.resolve_unit_from_coordinates()
 
-    print(current_coords)
-    print(desired_coords)
-    player1.unit_movement_output_general()
-    game.print_map()
-    print(player2_knight)
+            player1.unit_movement_output_general()
+            game.print_map()
+
+    player1.resolve_coordinates()
 
 print('END OF CODE')
