@@ -331,11 +331,9 @@ class player:
     def archer_output(self):
         index = self.archer.index(current_coords)
         del self.archer[index]
-        print(self.archer)
         game.map[current_coords[0]][current_coords[1]] = '  '
         game.map[desired_coords[0]][desired_coords[1]] = 'A{}'.format(self.player_number)
         self.archer_post.insert(index, desired_coords)
-        print(self.archer_post)
 
     def knight_output(self):
         index = self.knight.index(current_coords)
@@ -385,15 +383,20 @@ class player:
     def self_archer_death(self):
         index = self.archer.index(current_coords)
         del self.archer[index]
+        del self.archer_post[index]
         game.map[current_coords[0]][current_coords[1]] = '  '
 
     def self_knight_death(self):
         index = self.knight.index(current_coords)
         del self.knight[index]
+        del self.knight_post[index]
         game.map[current_coords[0]][current_coords[1]] = '  '
 
     def self_scout_death(self):
-        pass
+        index = self.scout.index(current_coords)
+        del self.scout[index]
+        del self.scout_post[index]
+        game.map[current_coords[0]][current_coords[1]] = '  '        
 
     def resolve_coordinates(self):
         if coords == None:
@@ -459,7 +462,7 @@ class player:
             elif current_coords in self.knight:
                 self.knight_output()
             print("Good. We collected 2 Wood")
-            
+
         else:
             if current_coords in self.spearman:
                 if 'K' in tile:
@@ -518,62 +521,29 @@ class player:
             else:
                 pass
 
-def player1_recruit_units():
-    player1.print_recruit_turn()
-    player1.print_resource()
+    def scout_movement_choice(self):
+        if current_coords[0] == desired_coords[0]:
+            if abs(desired_coords[1]-current_coords[1]) == 2:
+                return 2
+            elif abs(desired_coords[1]-current_coords[1]) == 1:
+                return 1
+        elif current_coords[1] == desired_coords[1]:
+            if abs(desired_coords[0]-current_coords[0]) == 2:
+                return 2
+            elif abs(desired_coords[0]-current_coords[0]) == 1:
+                return 1
 
-    while player1.check_resource() == True:
-        if player1.home_sweep() == True:
-
-            unit = player1.purchase_unit()
-            if unit == None:
-                break
-            else:
-                unit_name = player1.resolve_unit_name()
-                player1.unit_placement()
-
-                print("You has recruited a {}.".format(unit_name))
-                print()
-
-                player1.print_resource()
-
-            game.print_map()
-
-        else:
-            break
-
-def player2_recruit_units():
-    player2.print_recruit_turn()
-    player2.print_resource()
-
-    while player2.check_resource() == True:
-        if player2.home_sweep() == True:
-
-            unit = player1.purchase_unit()
-            if unit == None:
-                break
-            else:
-                unit_name = player2.resolve_unit_name()
-                player2.unit_placement()
-
-                print("You has recruited a {}.".format(unit_name))
-                print()
-
-                player2.print_resource()
-
-            game.print_map()
-
-        else:
-            break
-
-
-
-
+    def unit_movement_output_scout(self):
+        print("You have moved {} from {} to {}.".format(unit_name,current_coords,desired_coords))
+        if self.scout_movement_choice() == 1:
+            pass
+        elif self.scout_movement_choice() == 2:
+            pass
 
 
 
 #initialize game
-cols, rows = (5,5)
+cols, rows = (9,8)
 end = False
 game = little_battle()
 unit = ''
@@ -697,8 +667,12 @@ while player1.check_armies() == True:
             desired_coords = coords[1]
             unit_name = player1.resolve_unit_from_coordinates()
 
-            player1.unit_movement_output_general()
-            game.print_map()
+            if current_coords in player1.scout:
+                player1.unit_movement_output_scout()
+                game.print_map()
+            else:
+                player1.unit_movement_output_general()
+                game.print_map()
 
     player1.resolve_coordinates()
 
