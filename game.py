@@ -287,7 +287,7 @@ class player:
         print()
 
     def check_armies(self):
-        if all([v == '' for v in self.spearman]) and all([v == '' for v in self.archer]) == 0 and all([v == '' for v in self.knight]) and all([v == '' for v in self.scout]):
+        if (all([v == '' for v in self.spearman]) or len(self.spearman) == 0 ) and (all([v == '' for v in self.archer]) or len(self.archer) == 0 ) and (all([v == '' for v in self.knight]) or len(self.knight) == 0) and (all([v == '' for v in self.scout]) or len(self.scout) == 0):
             print("No Army to Move: next turn.")
             print()
             return False
@@ -326,14 +326,57 @@ class player:
                         else:
                             current_coords = (movement_input[0],movement_input[1])
                             desired_coords = (movement_input[2],movement_input[3])
-                            if current_coords in self.spearman or current_coords in self.archer or current_coords in self.knight or current_coords in self.scout:
+                            tile = game.map[desired_coords[0]][desired_coords[1]]
+
+                            #checking if a friendly unit is already in tile
+                            if '{}'.format(self.player_number) in tile:
+                                print("Invalid move. Try again")
+
+                            #checking if the unit exists 
+                            elif current_coords in self.spearman or current_coords in self.archer or current_coords in self.knight or current_coords in self.scout:
+
+                                #scout move input checking
                                 if current_coords in self.scout:
                                     if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
                                         return(current_coords,desired_coords)
+
                                     elif desired_coords[0] == current_coords[0]+2 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-2 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+2 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-2:
-                                        return(current_coords,desired_coords)
+                                        if current_coords[0] == desired_coords[0]:
+                                            difference = desired_coords[1] - current_coords[1]
+                                            choice = 'y{}'.format(difference)
+
+                                        elif current_coords[1] == desired_coords[1]:
+                                            difference = desired_coords[0] - current_coords[0]
+                                            choice = 'x{}'.format(difference)
+
+                                        if choice == 'y2':
+                                            tile = game.map[desired_coords[0]][(desired_coords[1]-1)]
+                                            if '{}'.format(self.player_number) in tile:
+                                                print('Invalid move. Try again')
+                                            else:
+                                                return(current_coords,desired_coords)
+
+                                        elif choice == 'y-2':
+                                            tile = game.map[desired_coords[0]][(desired_coords[1]+1)]
+                                            if '{}'.format(self.player_number) in tile:
+                                                print('Invalid move. Try again')
+                                            else:
+                                                return(current_coords,desired_coords)
+                                        elif choice == 'x2':
+                                            tile = game.map[(desired_coords[0]-1)][desired_coords[1]]
+                                            if '{}'.format(self.player_number) in tile:
+                                                print('Invalid move. Try again')
+                                            else:
+                                                return(current_coords,desired_coords)
+                                        elif choice == 'x-2':
+                                            tile = game.map[(desired_coords[0]+1)][desired_coords[1]]
+                                            if '{}'.format(self.player_number) in tile:
+                                                print('Invalid move. Try again')
+                                            else:
+                                                return(current_coords,desired_coords)
                                     else:
                                         print("NOT AD, TRY AGAIN")
+                                #others move input checking 
                                 else:
                                     if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
                                         return(current_coords,desired_coords)
@@ -352,16 +395,23 @@ class player:
     def archer_output(self):
         index = self.archer.index(current_coords)
         game.map[current_coords[0]][current_coords[1]] = '  '
-        game.map[desired_coords[0]][desired_coords[1]] = 'S{}'.format(self.player_number)
+        game.map[desired_coords[0]][desired_coords[1]] = 'A{}'.format(self.player_number)
         self.archer_post[index] = desired_coords
         self.archer[index] = ''
 
     def knight_output(self):
         index = self.knight.index(current_coords)
         game.map[current_coords[0]][current_coords[1]] = '  '
-        game.map[desired_coords[0]][desired_coords[1]] = 'S{}'.format(self.player_number)
+        game.map[desired_coords[0]][desired_coords[1]] = 'K{}'.format(self.player_number)
         self.knight_post[index] = desired_coords
         self.knight[index] = ''
+
+    def scout_output(self):
+        index = self.scout.index(current_coords)
+        game.map[current_coords[0]][current_coords[1]] = '  '
+        game.map[desired_coords[0]][desired_coords[1]] = 'T{}'.format(self.player_number)
+        self.scout_post[index] = desired_coords
+        self.scout[index] = ''
 
     def opponent_knight_death(self):
         opponent = players[self.player_number-1]
@@ -423,9 +473,11 @@ class player:
         self.spearman = self.spearman_post.copy() 
         self.archer = self.archer_post.copy()
         self.knight = self.knight_post.copy()
+        self.scout = self.scout_post.copy()
         self.spearman_post = []
         self.archer_post = []
         self.knight_post = []
+        self.scout_post = []
 
     def copy_to_post(self):
         self.spearman_post = self.spearman.copy()
@@ -545,28 +597,636 @@ class player:
 
     def scout_movement_choice(self):
         if current_coords[0] == desired_coords[0]:
-            if abs(desired_coords[1]-current_coords[1]) == 2:
-                return 2
-            elif abs(desired_coords[1]-current_coords[1]) == 1:
+            difference = desired_coords[1] - current_coords[1]
+            if abs(difference) == 1:
                 return 1
+            else:
+                return 'y{}'.format(difference)
+
         elif current_coords[1] == desired_coords[1]:
-            if abs(desired_coords[0]-current_coords[0]) == 2:
-                return 2
-            elif abs(desired_coords[0]-current_coords[0]) == 1:
+            difference = desired_coords[0] - current_coords[0]
+            if abs(difference) == 1:
                 return 1
+            else: 
+                return 'x{}'.format(difference)
 
     def unit_movement_output_scout(self):
+        tile = game.map[desired_coords[0]][desired_coords[1]]
         print("You have moved {} from {} to {}.".format(unit_name,current_coords,desired_coords))
-        if self.scout_movement_choice() == 1:
-            pass
-        elif self.scout_movement_choice() == 2:
-            pass
+
+        if choice == 1:
+            if tile == '~~':
+                print("We lost the army {} due to your command!".format(unit_name))
+                self.self_scout_death()
+
+            elif tile == 'GG':
+                self.gold += 2
+                self.scout_output()
+                print("Good. We collected 2 Gold")
+
+            elif tile == 'FF':
+                self.food += 2
+                self.scout_output()
+                print("Good. We collected 2 Food")
+
+            elif tile == 'WW':
+                self.wood += 2
+                self.scout_output()
+                print("Good. We collected 2 Wood")
+
+            else:
+                if 'S' in tile or 'A' in tile or 'K' in tile:
+                    print("you died")
+                    self.self_scout_death()
+
+                elif 'T' in tile:
+                    print("We destroyed the enemy Scout with massive loss!")
+                    self.self_scout_death()
+                    self.opponent_scout_death()
+
+                else:
+                    self.scout_output()
+
+        elif choice == 'y-2':
+            tile = game.map[desired_coords[0]][(desired_coords[1]+1)]
+
+            if tile == '~~':
+                print("We lost the army {} due to your command!".format(unit_name))
+                self.self_scout_death()
+            elif tile == 'GG':
+                self.gold += 2
+                print("Good. We collected 2 Gold")
+                game.map[desired_coords[0]][(desired_coords[1]+1)] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'FF':
+                self.food += 2
+                print("Good. We collected 2 Food")
+                game.map[desired_coords[0]][(desired_coords[1]+1)] = '  '
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'WW':
+                self.wood += 2
+                print("Good. We collected 2 Wood")
+                game.map[desired_coords[0]][(desired_coords[1]+1)] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif 'S' in tile or 'A' in tile or 'K' in tile:
+                self.self_scout_death()
+
+            elif 'T' in tile:
+                self.self_scout_death()
+                self.opponent_scout_death()
+
+            else:
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+                    else:
+                        self.scout_output()   
+
+        elif choice == 'y2':
+            tile = game.map[desired_coords[0]][(desired_coords[1]-1)]
+            if tile == '~~':
+                print("We lost the army {} due to your command!".format(unit_name))
+                self.self_scout_death()
+            elif tile == 'GG':
+                self.gold += 2
+                print("Good. We collected 2 Gold")
+                game.map[desired_coords[0]][(desired_coords[1]-1)] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'FF':
+                self.food += 2
+                print("Good. We collected 2 Food")
+                game.map[desired_coords[0]][(desired_coords[1]-1)] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'WW':
+                self.wood += 2
+                print("Good. We collected 2 Wood")
+                game.map[desired_coords[0]][(desired_coords[1]-1)] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif 'S' in tile or 'A' in tile or 'K' in tile:
+                self.self_scout_death()
+
+            elif 'T' in tile:
+                self.self_scout_death()
+                self.opponent_scout_death()
+
+            else:
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+                    else:
+                        self.scout_output()   
+        
+        elif choice == 'x-2':
+            tile = game.map[(desired_coords[0]+1)][desired_coords[1]]
+
+            if tile == '~~':
+                print("We lost the army {} due to your command!".format(unit_name))
+                self.self_scout_death()
+
+            elif tile == 'GG':
+                self.gold += 2
+                print("Good. We collected 2 Gold")
+                game.map[(desired_coords[0]+1)][desired_coords[1]] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'FF':
+                self.food += 2
+                print("Good. We collected 2 Food")
+                game.map[(desired_coords[0]+1)][desired_coords[1]] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'WW':
+                self.wood += 2
+                print("Good. We collected 2 Wood")
+                game.map[(desired_coords[0]+1)][desired_coords[1]] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif 'S' in tile or 'A' in tile or 'K' in tile:
+                self.self_scout_death()
+
+            elif 'T' in tile:
+                self.self_scout_death()
+                self.opponent_scout_death()
+
+            else:
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+                    else:
+                        self.scout_output()   
+
+        elif choice == 'x2':
+            tile = game.map[(desired_coords[0]-1)][desired_coords[1]]
+
+            if tile == '~~':
+                print("We lost the army {} due to your command!".format(unit_name))
+                self.self_scout_death()
+
+            elif tile == 'GG':
+                self.gold += 2
+                print("Good. We collected 2 Gold")
+                game.map[(desired_coords[0]-1)][desired_coords[1]] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()
+
+            elif tile == 'FF':
+                self.food += 2
+                print("Good. We collected 2 Food")
+                game.map[(desired_coords[0]-1)][desired_coords[1]] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()   
+
+            elif tile == 'WW':
+                self.wood += 2
+                print("Good. We collected 2 Wood")
+                game.map[(desired_coords[0]-1)][desired_coords[1]] = '  '
+
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()   
+
+            #checking for enemies
+            elif 'S' in tile or 'A' in tile or 'K' in tile:
+                self.self_scout_death()
+
+            elif 'T' in tile:
+                self.self_scout_death()
+                self.opponent_scout_death()
+
+            #checking 2 tiles away
+            else:
+                tile = game.map[desired_coords[0]][desired_coords[1]]
+                if tile == '~~':
+                    print("We lost the army {} due to your command!".format(unit_name))
+                    self.self_scout_death()
+                elif tile == 'GG':
+                    self.gold += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Gold")
+
+                elif tile == 'FF':
+                    self.food += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Food")
+
+                elif tile == 'WW':
+                    self.wood += 2
+                    self.scout_output()
+                    print("Good. We collected 2 Wood")
+                else:
+                    if 'S' in tile or 'A' in tile or 'K' in tile:
+                        self.self_scout_death()
+
+                    elif 'T' in tile:
+                        self.self_scout_death()
+                        self.opponent_scout_death()
+
+                    else:
+                        self.scout_output()   
 
 
 
 #initialize game
-cols, rows = (9,8)
-end = False
+cols, rows = (10,10)
 game = little_battle()
 unit = ''
 unit_name = ''
@@ -581,6 +1241,8 @@ home_2 = rows-2,cols-2
 
 home_bases = [home_1,home_2]
 
+game.map[3][3] = 'GG'
+game.map[4][3] = 'FF'
 year = 616
 
 #initialize units
@@ -676,7 +1338,7 @@ while player2.check_resource() == True:
     else:
         break
 
-while True:
+while player1.check_armies() == True:
     player1.copy_to_post()
     player1.print_move_turn()
 
@@ -688,9 +1350,11 @@ while True:
         else:
             current_coords = coords[0]
             desired_coords = coords[1]
+
             unit_name = player1.resolve_unit_from_coordinates()
 
             if current_coords in player1.scout:
+                choice = player1.scout_movement_choice()
                 player1.unit_movement_output_scout()
                 game.print_map()
             else:
