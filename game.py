@@ -338,7 +338,24 @@ class player:
                                 #scout move input checking
                                 if current_coords in self.scout:
                                     if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
-                                        return(current_coords,desired_coords)
+                                        opponent = players[self.player_number-2]
+                                        if 'H{}'.format(opponent) in tile:
+                                            if current_coords in self.spearman:
+                                                unit_name = "Spearman"
+                                            elif current_coords in self.archer:
+                                                unit_name = "Archer"
+                                            elif current_coords in self.knight:
+                                                unit_name = "Knight"
+                                            elif current_coords in self.scout:
+                                                unit_name = 'Scout'
+                                            print("The army {} captured the enemy’s capital.".format(unit_name))
+                                            print()
+                                            king = input("What’s your name, commander?\n")
+                                            print()
+                                            print("***Congratulation! Emperor {} unified the country in {}.***".format(king,year))
+                                            exit()
+                                        else:
+                                            return(current_coords,desired_coords)
 
                                     elif desired_coords[0] == current_coords[0]+2 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-2 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+2 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-2:
                                         if current_coords[0] == desired_coords[0]:
@@ -351,37 +368,129 @@ class player:
 
                                         if choice == 'y2':
                                             tile = game.map[desired_coords[0]][(desired_coords[1]-1)]
+                                            opponent = players[self.player_number-2]
                                             if '{}'.format(self.player_number) in tile:
                                                 print('Invalid move. Try again')
+                                            elif 'H{}'.format(opponent) in tile:
+                                                if current_coords in self.spearman:
+                                                    unit_name = "Spearman"
+                                                elif current_coords in self.archer:
+                                                    unit_name = "Archer"
+                                                elif current_coords in self.knight:
+                                                    unit_name = "Knight"
+                                                elif current_coords in self.scout:
+                                                    unit_name = 'Scout'
+                                                print(unit_name)
+                                                print("The army {} captured the enemy’s capital.".format(unit_name))
+                                                print()
+                                                king = input("What’s your name, commander?\n")
+                                                print()
+                                                print("***Congratulation! Emperor {} unified the country in {}.***".format(king,year))
+                                                exit()
                                             else:
                                                 return(current_coords,desired_coords)
 
                                         elif choice == 'y-2':
                                             tile = game.map[desired_coords[0]][(desired_coords[1]+1)]
+                                            opponent = players[self.player_number-2]
                                             if '{}'.format(self.player_number) in tile:
                                                 print('Invalid move. Try again')
+
+                                            elif 'H{}'.format(opponent) in tile:
+                                                if current_coords in self.spearman:
+                                                    unit_name = "Spearman"
+                                                elif current_coords in self.archer:
+                                                    unit_name = "Archer"
+                                                elif current_coords in self.knight:
+                                                    unit_name = "Knight"
+                                                elif current_coords in self.scout:
+                                                    unit_name = 'Scout'
+                                                print(unit_name)
+                                                print("The army {} captured the enemy’s capital.".format(unit_name))
+                                                print()
+                                                king = input("What’s your name, commander?\n")
+                                                print()
+                                                print("***Congratulation! Emperor {} unified the country in {}.***".format(king,year))
+                                                exit()                                                
                                             else:
                                                 return(current_coords,desired_coords)
+
                                         elif choice == 'x2':
                                             tile = game.map[(desired_coords[0]-1)][desired_coords[1]]
+                                            opponent = players[self.player_number-2]
                                             if '{}'.format(self.player_number) in tile:
                                                 print('Invalid move. Try again')
+
+                                            elif 'H{}'.format(opponent) in tile:
+                                                if current_coords in self.spearman:
+                                                    unit_name = "Spearman"
+                                                elif current_coords in self.archer:
+                                                    unit_name = "Archer"
+                                                elif current_coords in self.knight:
+                                                    unit_name = "Knight"
+                                                elif current_coords in self.scout:
+                                                    unit_name = 'Scout'
+                                                print(unit_name)
+                                                print("The army {} captured the enemy’s capital.".format(unit_name))
+                                                print()
+                                                king = input("What’s your name, commander?\n")
+                                                print()
+                                                print("***Congratulation! Emperor {} unified the country in {}.***".format(king,year))
+                                                exit()  
                                             else:
                                                 return(current_coords,desired_coords)
+
                                         elif choice == 'x-2':
                                             tile = game.map[(desired_coords[0]+1)][desired_coords[1]]
+                                            opponent = players[self.player_number-2]
                                             if '{}'.format(self.player_number) in tile:
                                                 print('Invalid move. Try again')
+                                        
+                                            elif 'H{}'.format(opponent) in tile:
+                                                if current_coords in self.spearman:
+                                                    unit_name = "Spearman"
+                                                elif current_coords in self.archer:
+                                                    unit_name = "Archer"
+                                                elif current_coords in self.knight:
+                                                    unit_name = "Knight"
+                                                elif current_coords in self.scout:
+                                                    unit_name = 'Scout'
+                                                print(unit_name)
+                                                print("The army {} captured the enemy’s capital.".format(unit_name))
+                                                print()
+                                                king = input("What’s your name, commander?\n")
+                                                print()
+                                                print("***Congratulation! Emperor {} unified the country in {}.***".format(king,year))
+                                                exit()  
                                             else:
                                                 return(current_coords,desired_coords)
                                     else:
-                                        print("NOT AD, TRY AGAIN")
+                                        print("Invalid move. Try again")
                                 #others move input checking 
                                 else:
                                     if desired_coords[0] == current_coords[0]+1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0]-1 and desired_coords[1] == current_coords[1] or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]+1 or desired_coords[0] == current_coords[0] and desired_coords[1] == current_coords[1]-1:
-                                        return(current_coords,desired_coords)
+                                        opponent = players[self.player_number-2]
+                                        if 'H{}'.format(opponent) in tile:
+                                            if current_coords in self.spearman:
+                                                unit_name = "Spearman"
+                                            elif current_coords in self.archer:
+                                                unit_name = "Archer"
+                                            elif current_coords in self.knight:
+                                                unit_name = "Knight"
+                                            elif current_coords in self.scout:
+                                                unit_name = 'Scout'
+                                            print(unit_name)
+                                            print("The army {} captured the enemy’s capital.".format(unit_name))
+                                            print()
+                                            king = input("What’s your name, commander?\n")
+                                            print()
+                                            print("***Congratulation! Emperor {} unified the country in {}.***".format(king,year))
+                                            exit()
+
+                                        else:
+                                            return(current_coords,desired_coords)
                                     else:
-                                        print("NOT AD, Try again")
+                                        print("Invalid move. Try again")
                             else:
                                 print("Invalid move. Try again")
     
@@ -414,37 +523,33 @@ class player:
         self.scout[index] = ''
 
     def opponent_knight_death(self):
-        opponent = players[self.player_number-1]
-        knight_list = player_knights[opponent]
-        knight_list.remove(desired_coords)
-        army_list = player_armies[opponent]
+        if self.player_number_input == 1:
+            player2.knight.remove(desired_coords)
+        elif self.player_number_input == 2:
+            player1.knight.remove(desired_coords)
         game.map[desired_coords[0]][desired_coords[1]] = '  '
-        del army_list[0] 
 
     def opponent_archer_death(self):
-        opponent = players[self.player_number-1]
-        archer_list = player_archers[opponent]
-        archer_list.remove(desired_coords)
-        army_list = player_armies[opponent]
+        if self.player_number_input == 1:
+            player2.archer.remove(desired_coords)
+        elif self.player_number_input == 2:
+            player1.archer.remove(desired_coords)
         game.map[desired_coords[0]][desired_coords[1]] = '  '
-        del army_list[0]
 
     def opponent_spearman_death(self):
-        opponent = players[self.player_number-1]
-        spearman_list = player_spearmans[opponent]
-        spearman_list.remove(desired_coords)
-        army_list = player_armies[opponent]
+        if self.player_number_input == 1:
+            player2.spearman.remove(desired_coords)
+        elif self.player_number_input == 2:
+            player1.spearman.remove(desired_coords)
         game.map[desired_coords[0]][desired_coords[1]] = '  '
-        del army_list[0]
 
     def opponent_scout_death(self):
-        opponent = players[self.player_number-1]
-        scout_list = player_scouts[opponent]
-        scout_list.remove(desired_coords)
-        army_list = player_armies[opponent]
+        if self.player_number_input == 1:
+            player2.scout.remove(desired_coords)
+        elif self.player_number_input == 2:
+            player1.scout.remove(desired_coords)
         game.map[desired_coords[0]][desired_coords[1]] = '  '
-        del army_list[0]              
-
+              
     def self_spearman_death(self):
         index = self.spearman.index(current_coords)
         del self.spearman[index]
@@ -636,7 +741,7 @@ class player:
 
             else:
                 if 'S' in tile or 'A' in tile or 'K' in tile:
-                    print("you died")
+                    print("We lost the army {} due to your command!".format(unit_name))
                     self.self_scout_death()
 
                 elif 'T' in tile:
@@ -755,9 +860,11 @@ class player:
                         self.scout_output()
 
             elif 'S' in tile or 'A' in tile or 'K' in tile:
+                print("We lost the army {} due to your command!".format(unit_name))
                 self.self_scout_death()
 
             elif 'T' in tile:
+                print("We destroyed the enemy Scout with massive loss!")
                 self.self_scout_death()
                 self.opponent_scout_death()
 
@@ -898,9 +1005,11 @@ class player:
                         self.scout_output()
 
             elif 'S' in tile or 'A' in tile or 'K' in tile:
+                print("We lost the army {} due to your command!".format(unit_name))
                 self.self_scout_death()
 
             elif 'T' in tile:
+                print("We destroyed the enemy Scout with massive loss!")
                 self.self_scout_death()
                 self.opponent_scout_death()
 
@@ -1042,6 +1151,7 @@ class player:
                         self.scout_output()
 
             elif 'S' in tile or 'A' in tile or 'K' in tile:
+                print("We lost the army {} due to your command!".format(unit_name))
                 self.self_scout_death()
 
             elif 'T' in tile:
@@ -1068,8 +1178,10 @@ class player:
                     print("Good. We collected 2 Wood")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
+                        print("We lost the army {} due to your command!".format(unit_name))
                         self.self_scout_death()
                     elif 'T' in tile:
+                        print("We destroyed the enemy Scout with massive loss!")
                         self.self_scout_death()
                         self.opponent_scout_death()
                     else:
@@ -1186,6 +1298,7 @@ class player:
 
             #checking for enemies
             elif 'S' in tile or 'A' in tile or 'K' in tile:
+                print("We lost the army {} due to your command!".format(unit_name))
                 self.self_scout_death()
 
             elif 'T' in tile:
@@ -1214,9 +1327,11 @@ class player:
                     print("Good. We collected 2 Wood")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
+                        print("We lost the army {} due to your command!".format(unit_name))
                         self.self_scout_death()
 
                     elif 'T' in tile:
+                        print("We destroyed the enemy Scout with massive loss!")
                         self.self_scout_death()
                         self.opponent_scout_death()
 
@@ -1226,7 +1341,7 @@ class player:
 
 
 #initialize game
-cols, rows = (10,10)
+cols, rows = (5,5)
 game = little_battle()
 unit = ''
 unit_name = ''
@@ -1241,8 +1356,6 @@ home_2 = rows-2,cols-2
 
 home_bases = [home_1,home_2]
 
-game.map[3][3] = 'GG'
-game.map[4][3] = 'FF'
 year = 616
 
 #initialize units
@@ -1272,10 +1385,21 @@ player_archers = [player1_archer, player2_archer]
 player_knights = [player1_knight, player2_knight]
 player_scouts = [player1_scout, player2_scout]
 
-
 player1 = player(10,10,10,1)
 
 player2 = player(10,10,10,2)
+
+player1_army = []
+player1_spearman = player1.spearman
+player1_archer = player1.archer
+player1_knight = player1.knight
+player1_scout = player1.scout
+
+player2_army = []
+player2_spearman = player2.spearman
+player2_archer = player2.archer
+player2_knight = player2.knight
+player2_scout = player2.scout
 
 #running the game
 #opening
@@ -1290,55 +1414,56 @@ game.print_prices()
 print("(enter PRIS to display the price list)")
 print()
 
-game.print_year()
+while True:
+    game.print_year()
 
-player1.print_recruit_turn()
-player1.print_resource()
+    player1.print_recruit_turn()
+    player1.print_resource()
 
-while player1.check_resource() == True:
-    if player1.home_sweep() == True:
+    while player1.check_resource() == True:
+        if player1.home_sweep() == True:
 
-        unit = player1.purchase_unit()
-        if unit == None:
-            break
+            unit = player1.purchase_unit()
+            if unit == None:
+                break
+            else:
+                unit_name = player1.resolve_unit_name()
+                player1.unit_placement()
+
+                print("You has recruited a {}.".format(unit_name))
+                print()
+
+                player1.print_resource()
+
+            game.print_map()
+
         else:
-            unit_name = player1.resolve_unit_name()
-            player1.unit_placement()
-
-            print("You has recruited a {}.".format(unit_name))
-            print()
-
-            player1.print_resource()
-
-        game.print_map()
-
-    else:
-        break
-
-player2.print_recruit_turn()
-player2.print_resource()
-
-while player2.check_resource() == True:
-    if player2.home_sweep() == True:
-
-        unit = player1.purchase_unit()
-        if unit == None:
             break
+
+    player2.print_recruit_turn()
+    player2.print_resource()
+
+    while player2.check_resource() == True:
+        if player2.home_sweep() == True:
+
+            unit = player2.purchase_unit()
+            if unit == None:
+                break
+            else:
+                unit_name = player2.resolve_unit_name()
+                player2.unit_placement()
+
+                print("You has recruited a {}.".format(unit_name))
+                print()
+
+                player2.print_resource()
+
+            game.print_map()
+            
+
         else:
-            unit_name = player2.resolve_unit_name()
-            player2.unit_placement()
+            break
 
-            print("You has recruited a {}.".format(unit_name))
-            print()
-
-            player2.print_resource()
-
-        game.print_map()
-
-    else:
-        break
-
-while player1.check_armies() == True:
     player1.copy_to_post()
     player1.print_move_turn()
 
@@ -1360,7 +1485,32 @@ while player1.check_armies() == True:
             else:
                 player1.unit_movement_output_general()
                 game.print_map()
-    
+
     player1.resolve_coordinates()
 
-print('END OF CODE')
+    player2.copy_to_post()
+    player2.print_move_turn()
+
+    while player2.check_armies() == True:
+        player2.print_army_to_move()
+        coords = player2.unit_movement_input()
+        if coords == None:
+            break
+        else:
+            current_coords = coords[0]
+            desired_coords = coords[1]
+
+            unit_name = player2.resolve_unit_from_coordinates()
+
+            if current_coords in player2.scout:
+                choice = player2.scout_movement_choice()
+                player2.unit_movement_output_scout()
+                game.print_map()
+            else:
+                player2.unit_movement_output_general()
+                game.print_map()
+                
+    player2.resolve_coordinates()
+
+    year += 1
+
