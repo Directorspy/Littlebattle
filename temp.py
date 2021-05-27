@@ -2,110 +2,110 @@ import sys
 
 #load_config_file
 def load_config_file(filepath):
-	try:
-		f = open(filepath, "r")	
-	except FileNotFoundError:
-		raise FileNotFoundError
+    try:
+        f = open(filepath, "r")	
+    except FileNotFoundError:
+        raise FileNotFoundError
 #splitting file contents 
-	file_lines = f.readlines()
+    file_lines = f.readlines()
 
-	good_titles = ['Frame:', 'Water:', 'Wood:', 'Food:', 'Gold:']
-	checking_titles = []
-	checking = []
+    good_titles = ['Frame:', 'Water:', 'Wood:', 'Food:', 'Gold:']
+    checking_titles = []
+    checking = []
 
-	all_coordinates = []
+    all_coordinates = []
 
-	for i in file_lines:
-		alpha = i.split()
-		checking_titles.append(alpha[0])
-		del alpha[0]
-		checking.append(alpha)
+    for i in file_lines:
+        alpha = i.split()
+        checking_titles.append(alpha[0])
+        del alpha[0]
+        checking.append(alpha)
 
-	if checking_titles != good_titles:
-		raise SyntaxError('Invalid Configuration File: format error!')
+    if checking_titles != good_titles:
+        raise SyntaxError('Invalid Configuration File: format error!')
 
 #checking the frame
-	width, height = 0, 0
-	frame = checking[0][0]
-	if 'x' in frame:
-		a = 0
-		for i in range(len(frame)):
-			if 'x' in frame[i]:
-				a += 1
+    width, height = 0, 0
+    frame = checking[0][0]
+    if 'x' in frame:
+        a = 0
+        for i in range(len(frame)):
+            if 'x' in frame[i]:
+                a += 1
 
-		if a == 1:
-			temp = frame.split('x')
+        if a == 1:
+            temp = frame.split('x')
 
-			if temp[0].isnumeric() == False or temp[1].isnumeric() == False:
-				raise SyntaxError('Invalid Configuration File: frame should be in format widthxheight!')
-			
-			if len(temp[0].split('.')) != 1 or len(temp[1].split('.')) != 1:
-				raise SyntaxError('Invalid Configuration File: frame should be in format widthxheight!')
-			
-			if int(temp[1])>5 or int(temp[0])<5 or int(temp[1])>7 or int(temp[0])>7:
-				raise ArithmeticError('Invalid Configuration File: width and height should range from 5 to 7!')
-			
-			width, height = int(temp[0]),int(temp[1])
+            if temp[0].isnumeric() == False or temp[1].isnumeric() == False:
+                raise SyntaxError('Invalid Configuration File: frame should be in format widthxheight!')
+            
+            if len(temp[0].split('.')) != 1 or len(temp[1].split('.')) != 1:
+                raise SyntaxError('Invalid Configuration File: frame should be in format widthxheight!')
+            
+            if int(temp[1])>5 or int(temp[0])<5 or int(temp[1])>7 or int(temp[0])>7:
+                raise ArithmeticError('Invalid Configuration File: width and height should range from 5 to 7!')
+            
+            width, height = int(temp[0]),int(temp[1])
 
-		else:
-			raise SyntaxError('Invalid Configuration File: frame should be in format widthxheight!')
+        else:
+            raise SyntaxError('Invalid Configuration File: frame should be in format widthxheight!')
 
 #checking coordinates
-	coordinates = []
-	for i in range(1,len(checking)):
-		resource_type = checking_titles[i][:-1]
-		resource_coords = checking[i]
-		
-		if len(resource_coords)%2 != 0:
-			raise SyntaxError('Configuration File: {} has an odd number of elements!'.format(resource_type))
-		
-		for j in range(len(resource_coords)):
-			if resource_coords[j].isnumeric() == False:
-				raise ValueError('Invalid Configuration File: {} contains non integer characters!'.format(resource_type))
-			
-			if len(resource_coords[j].split('.')) != 1:
-				raise ValueError('Invalid Configuration File: {} contains non integer characters!'.format(resource_type))
+    coordinates = []
+    for i in range(1,len(checking)):
+        resource_type = checking_titles[i][:-1]
+        resource_coords = checking[i]
+        
+        if len(resource_coords)%2 != 0:
+            raise SyntaxError('Configuration File: {} has an odd number of elements!'.format(resource_type))
+        
+        for j in range(len(resource_coords)):
+            if resource_coords[j].isnumeric() == False:
+                raise ValueError('Invalid Configuration File: {} contains non integer characters!'.format(resource_type))
+            
+            if len(resource_coords[j].split('.')) != 1:
+                raise ValueError('Invalid Configuration File: {} contains non integer characters!'.format(resource_type))
 
-			if int(resource_coords[j])<0 or int(resource_coords[j])>width or int(resource_coords[j])>height:
-				raise ArithmeticError('Invalid Configuration File: {} contains a position that is out of map.'.format(resource_type))
-				
-		beta = []
-		for n in range(0, len(resource_coords), 2):
-			coords = (int(resource_coords[n]),int(resource_coords[n+1]))
-			good_coords = [(1, 1), (width-2, height-2), (0, 1), (1, 0), (2, 1), (1, 2), (width-3, height-2), (width-2, height-3), (width-1, height-2), (width-2, height-1)]
+            if int(resource_coords[j])<0 or int(resource_coords[j])>width or int(resource_coords[j])>height:
+                raise ArithmeticError('Invalid Configuration File: {} contains a position that is out of map.'.format(resource_type))
+                
+        beta = []
+        for n in range(0, len(resource_coords), 2):
+            coords = (int(resource_coords[n]),int(resource_coords[n+1]))
+            good_coords = [(1, 1), (width-2, height-2), (0, 1), (1, 0), (2, 1), (1, 2), (width-3, height-2), (width-2, height-3), (width-1, height-2), (width-2, height-1)]
 
-			if coords in good_coords:
-				raise ValueError('Invalid Configuration File: The positions of home bases or the positions next to the home bases are occupied!')
-			
-			all_coordinates.append(coords)
-			beta.append(coords)
-		coordinates.append(beta)
-	
+            if coords in good_coords:
+                raise ValueError('Invalid Configuration File: The positions of home bases or the positions next to the home bases are occupied!')
+            
+            all_coordinates.append(coords)
+            beta.append(coords)
+        coordinates.append(beta)
+    
 #checking duplicates
-	coordinates_reduced = set(all_coordinates)
-	if len(all_coordinates) != len(coordinates_reduced):
-		num = 1
-		duplicates = ''
+    coordinates_reduced = set(all_coordinates)
+    if len(all_coordinates) != len(coordinates_reduced):
+        num = 1
+        duplicates = ''
 
-		for k in range(len(all_coordinates)):
-			b = []
-			temp = all_coordinates[k]
-			for l in range(len(all_coordinates)):
-				dup = 0
-				if temp == all_coordinates[l]:
-					dup += 1
-				b.append(dup)
+        for k in range(len(all_coordinates)):
+            b = []
+            temp = all_coordinates[k]
+            for l in range(len(all_coordinates)):
+                dup = 0
+                if temp == all_coordinates[l]:
+                    dup += 1
+                b.append(dup)
 
-			if sum(b)>num:
-				duplicates = temp
-				num = sum(b)
-				break
+            if sum(b)>num:
+                duplicates = temp
+                num = sum(b)
+                break
 
-		raise SyntaxError('Invalid Configuration File: Duplicate position {}!'.format(duplicates))
+        raise SyntaxError('Invalid Configuration File: Duplicate position {}!'.format(duplicates))
 
 #output
-	waters, woods, foods, golds = coordinates[0], coordinates[1], coordinates[2], coordinates[3] # list of position tuples
-	return width, height, waters, woods, foods, golds
+    waters, woods, foods, golds = coordinates[0], coordinates[1], coordinates[2], coordinates[3] # list of position tuples
+    return width, height, waters, woods, foods, golds
 
 #unit info
 class units:
@@ -375,7 +375,7 @@ class player:
                     else:
                         print(' {},'.format(self.archer[i]),end='')
                 print(' {}'.format(self.archer[-1]))
-   
+
         if 'K' in self.army:
             if all([v == '' for v in self.knight]):
                 pass
@@ -662,7 +662,7 @@ class player:
         elif self.player_number_input == 2:
             player1.scout.remove(desired_coords)
         game.map[desired_coords[0]][desired_coords[1]] = '  '
-              
+            
     def self_spearman_death(self):
         index = self.spearman.index(current_coords)
         del self.spearman[index]
@@ -1502,167 +1502,166 @@ class player:
                         self.scout_output()   
 
 if __name__ == "__main__":
-	if len(sys.argv) != 2:
-		print("Usage: python3 little_battle.py <filepath>")
-		sys.exit()
-	filepath = sys.argv[1]
-	width, height, waters, woods, foods, golds = load_config_file(sys.argv[1])
-	print('Configuration file {} was loaded.'.format(filepath))
+    if len(sys.argv) != 2:
+        print("Usage: python3 little_battle.py <filepath>")
+        sys.exit()
+    filepath = sys.argv[1]
+    width, height, waters, woods, foods, golds = load_config_file(sys.argv[1])
+    print('Configuration file {} was loaded.'.format(filepath))
 
-	#initialize game
-	cols, rows = (width,height)
-	game = little_battle()
-	unit = ''
-	unit_name = ''
-	current_coords = 0,0
-	desired_coords = 0,0
+    #initialize game
+    cols, rows = (width,height)
+    game = little_battle()
+    unit = ''
+    unit_name = ''
+    current_coords = 0,0
+    desired_coords = 0,0
 
-	game.map[1][1] = "H1"
-	home_1 = 1,1
+    game.map[1][1] = "H1"
+    home_1 = 1,1
 
-	game.map[rows-2][cols-2] = "H2"
-	home_2 = rows-2,cols-2
+    game.map[rows-2][cols-2] = "H2"
+    home_2 = rows-2,cols-2
 
-	home_bases = [home_1,home_2]
+    home_bases = [home_1,home_2]
 
-	#setting water
-	for i in range(len(waters)):
-		a = waters[i]
-		game.map[a[0]][a[1]] = '~~'
+    #setting water
+    for i in range(len(waters)):
+        a = waters[i]
+        game.map[a[0]][a[1]] = '~~'
 
-	#setting wood
-	for i in range(len(woods)):
-		a = woods[i]
-		game.map[a[0]][a[1]] = 'WW'
+    #setting wood
+    for i in range(len(woods)):
+        a = woods[i]
+        game.map[a[0]][a[1]] = 'WW'
 
-	#setting food
-	for i in range(len(foods)):
-		a = foods[i]
-		game.map[a[0]][a[1]] = 'FF'
+    #setting food
+    for i in range(len(foods)):
+        a = foods[i]
+        game.map[a[0]][a[1]] = 'FF'
 
-	#setting gold
-	for i in range(len(golds)):
-		a = golds[i]
-		game.map[a[0]][a[1]] = 'GG'
+    #setting gold
+    for i in range(len(golds)):
+        a = golds[i]
+        game.map[a[0]][a[1]] = 'GG'
 
-	year = 616
+    year = 616
 
-	#initialize units
-	spearman = spearman()
-	archer = archer()
-	knight = knight()
-	scout = scout()
+    #initialize units
+    spearman = spearman()
+    archer = archer()
+    knight = knight()
+    scout = scout()
 
-	#initialize players
-	players = [1,2]
+    #initialize players
+    players = [1,2]
 
-	player1 = player(2,2,2,1)
+    player1 = player(2,2,2,1)
 
-	player2 = player(2,2,2,2)
+    player2 = player(2,2,2,2)
 
-	#running the game
+    #running the game
 
-	#opening
-	print("Game Started: Little Battle! (enter QUIT to quit the game)")
-	print()
+    #opening
+    print("Game Started: Little Battle! (enter QUIT to quit the game)")
+    print()
 
-	game.print_map()
-	print("(enter DIS to display the map)")
-	print()
+    game.print_map()
+    print("(enter DIS to display the map)")
+    print()
 
-	game.print_prices()
-	print("(enter PRIS to display the price list)")
-	print()
+    game.print_prices()
+    print("(enter PRIS to display the price list)")
+    print()
 
-	while True:
-		game.print_year()
+    while True:
+        game.print_year()
 
-	#player 1 recruit army
-		player1.print_recruit_turn()
+    #player 1 recruit army
+        player1.print_recruit_turn()
+        player1.print_resource()
 
-		while player1.check_resource() == True:
-
+        while player1.check_resource() == True:
             player1.print_resource()
+            if player1.home_sweep() == True:
+                unit = player1.purchase_unit()
+                if unit == None:
+                    break
+                else:
+                    unit_name = player1.resolve_unit_name()
+                    player1.unit_placement()
 
-			if player1.home_sweep() == True:
-				unit = player1.purchase_unit()
-				if unit == None:
-					break
-				else:
-					unit_name = player1.resolve_unit_name()
-					player1.unit_placement()
+                    print()
+                    print("You has recruited a {}.".format(unit_name))
+                    print()
+            else:
+                break
 
-					print()
-					print("You has recruited a {}.".format(unit_name))
-					print()
-			else:
-				break
+    #player 1 move army
+        player1.copy_to_post()
+        player1.print_move_turn()
 
-	#player 1 move army
-		player1.copy_to_post()
-		player1.print_move_turn()
+        while player1.check_armies() == True:
+            coords = player1.unit_movement_input()
+            if coords == None:
+                break
+            else:
+                current_coords = coords[0]
+                desired_coords = coords[1]
 
-		while player1.check_armies() == True:
-			coords = player1.unit_movement_input()
-			if coords == None:
-				break
-			else:
-				current_coords = coords[0]
-				desired_coords = coords[1]
+                unit_name = player1.resolve_unit_from_coordinates()
 
-				unit_name = player1.resolve_unit_from_coordinates()
+                if current_coords in player1.scout:
+                    choice = player1.scout_movement_choice()
+                    player1.unit_movement_output_scout()
+                else:
+                    player1.unit_movement_output_general()
 
-				if current_coords in player1.scout:
-					choice = player1.scout_movement_choice()
-					player1.unit_movement_output_scout()
-				else:
-					player1.unit_movement_output_general()
+        player1.resolve_coordinates()
 
-		player1.resolve_coordinates()
+    #player 2 recruit army
+        player2.print_recruit_turn()
+        player2.print_resource()
 
-	#player 2 recruit army
-		player2.print_recruit_turn()
-		player2.print_resource()
+        while player2.check_resource() == True:
+            if player2.home_sweep() == True:
 
-		while player2.check_resource() == True:
-			if player2.home_sweep() == True:
+                unit = player2.purchase_unit()
+                if unit == None:
+                    break
+                else:
+                    unit_name = player2.resolve_unit_name()
+                    player2.unit_placement()
 
-				unit = player2.purchase_unit()
-				if unit == None:
-					break
-				else:
-					unit_name = player2.resolve_unit_name()
-					player2.unit_placement()
+                    print()
+                    print("You has recruited a {}.".format(unit_name))
+                    print()
 
-					print()
-					print("You has recruited a {}.".format(unit_name))
-					print()
+                    player2.print_resource()
+            else:
+                break
 
-					player2.print_resource()
-			else:
-				break
+    #player 2 move army
+        player2.copy_to_post()
+        player2.print_move_turn()
 
-	#player 2 move army
-		player2.copy_to_post()
-		player2.print_move_turn()
+        while player2.check_armies() == True:
+            coords = player2.unit_movement_input()
+            if coords == None:
+                break
+            else:
+                current_coords = coords[0]
+                desired_coords = coords[1]
 
-		while player2.check_armies() == True:
-			coords = player2.unit_movement_input()
-			if coords == None:
-				break
-			else:
-				current_coords = coords[0]
-				desired_coords = coords[1]
+                unit_name = player2.resolve_unit_from_coordinates()
 
-				unit_name = player2.resolve_unit_from_coordinates()
+                if current_coords in player2.scout:
+                    choice = player2.scout_movement_choice()
+                    player2.unit_movement_output_scout()
+                else:
+                    player2.unit_movement_output_general()
+                    
+        player2.resolve_coordinates()
 
-				if current_coords in player2.scout:
-					choice = player2.scout_movement_choice()
-					player2.unit_movement_output_scout()
-				else:
-					player2.unit_movement_output_general()
-					
-		player2.resolve_coordinates()
-
-	#end of turn
-		year += 1
+    #end of turn
+        year += 1
