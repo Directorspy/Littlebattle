@@ -223,11 +223,11 @@ class player:
     def check_resource(self):
         if (self.wood == 0 or self.food == 0) or (self.wood == 0 or self.gold == 0) or (self.food == 0 or self.gold == 0) or (self.wood == 0 or self.food == 0 or self.gold == 0):
             print()
-            return True
+            print("No resources to recruit any armies.")
+            return False            
         else:
             print()
-            print("No resources to recruit any armies.")
-            return False
+            return True
 
     def purchase_unit(self):
         while True:
