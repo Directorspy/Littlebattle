@@ -221,12 +221,10 @@ class player:
         print()
 
     def check_resource(self):
-        if (self.wood == 0 or self.food == 0) or (self.wood == 0 or self.gold == 0) or (self.food == 0 or self.gold == 0) or (self.wood == 0 or self.food == 0 or self.gold == 0):
-            print()
+        if (self.wood == 0 and self.food == 0) or (self.wood == 0 and self.gold == 0) or (self.food == 0 and self.gold == 0) or (self.wood == 0 and self.food == 0 and self.gold == 0):
             print("No resources to recruit any armies.")
             return False            
         else:
-            print()
             return True
 
     def purchase_unit(self):
@@ -303,10 +301,8 @@ class player:
 
             if placement_coords == 'DIS':
                 game.print_map()
-                print()
             elif placement_coords == 'PRIS':
                 game.print_prices()
-                print()
             elif placement_coords == 'QUIT':
                 exit()
             else:
@@ -736,7 +732,7 @@ class player:
                 self.archer_output()
             elif current_coords in self.knight:
                 self.knight_output()
-            print("Good. We collected 2 Gold")
+            print("Good. We collected 2 Gold.")
 
         elif tile == 'FF':
             self.food += 2
@@ -746,7 +742,7 @@ class player:
                 self.archer_output()
             elif current_coords in self.knight:
                 self.knight_output()
-            print("Good. We collected 2 Food")
+            print("Good. We collected 2 Food.")
 
         elif tile == 'WW':
             self.wood += 2
@@ -756,7 +752,7 @@ class player:
                 self.archer_output()
             elif current_coords in self.knight:
                 self.knight_output()
-            print("Good. We collected 2 Wood")
+            print("Good. We collected 2 Wood.")
 
         else:
             if current_coords in self.spearman:
@@ -845,17 +841,17 @@ class player:
             elif tile == 'GG':
                 self.gold += 2
                 self.scout_output()
-                print("Good. We collected 2 Gold")
+                print("Good. We collected 2 Gold.")
 
             elif tile == 'FF':
                 self.food += 2
                 self.scout_output()
-                print("Good. We collected 2 Food")
+                print("Good. We collected 2 Food.")
 
             elif tile == 'WW':
                 self.wood += 2
                 self.scout_output()
-                print("Good. We collected 2 Wood")
+                print("Good. We collected 2 Wood.")
 
             else:
                 if 'S' in tile or 'A' in tile or 'K' in tile:
@@ -888,17 +884,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -922,17 +918,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -957,17 +953,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1004,17 +1000,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1043,17 +1039,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1068,7 +1064,7 @@ class player:
 
             elif tile == 'FF':
                 self.food += 2
-                print("Good. We collected 2 Food")
+                print("Good. We collected 2 Food.")
                 game.map[desired_coords[0]][(desired_coords[1]-1)] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1078,17 +1074,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1113,17 +1109,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1160,17 +1156,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print('We lost the army Scout due to your command!')
@@ -1191,7 +1187,7 @@ class player:
 
             elif tile == 'GG':
                 self.gold += 2
-                print("Good. We collected 2 Gold")
+                print("Good. We collected 2 Gold.")
                 game.map[(desired_coords[0]+1)][desired_coords[1]] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1201,17 +1197,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1226,7 +1222,7 @@ class player:
 
             elif tile == 'FF':
                 self.food += 2
-                print("Good. We collected 2 Food")
+                print("Good. We collected 2 Food.")
                 game.map[(desired_coords[0]+1)][desired_coords[1]] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1236,17 +1232,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1261,7 +1257,7 @@ class player:
 
             elif tile == 'WW':
                 self.wood += 2
-                print("Good. We collected 2 Wood")
+                print("Good. We collected 2 Wood.")
                 game.map[(desired_coords[0]+1)][desired_coords[1]] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1271,17 +1267,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1317,17 +1313,17 @@ class player:
                     self.self_scout_death()
                 elif tile == 'GG':
                     self.gold += 2
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1349,7 +1345,7 @@ class player:
             #checking resources
             elif tile == 'GG':
                 self.gold += 2
-                print("Good. We collected 2 Gold")
+                print("Good. We collected 2 Gold.")
                 game.map[(desired_coords[0]-1)][desired_coords[1]] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1359,12 +1355,12 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
@@ -1395,17 +1391,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1420,7 +1416,7 @@ class player:
 
             elif tile == 'WW':
                 self.wood += 2
-                print("Good. We collected 2 Wood")
+                print("Good. We collected 2 Wood.")
                 game.map[(desired_coords[0]-1)][desired_coords[1]] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1430,17 +1426,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1479,17 +1475,17 @@ class player:
                 elif tile == 'GG':
                     self.gold += 2
                     self.scout_output()
-                    print("Good. We collected 2 Gold")
+                    print("Good. We collected 2 Gold.")
 
                 elif tile == 'FF':
                     self.food += 2
                     self.scout_output()
-                    print("Good. We collected 2 Food")
+                    print("Good. We collected 2 Food.")
 
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1507,8 +1503,8 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: python3 little_battle.py <filepath>")
         sys.exit()
-    filepath = sys.argv[1]
-    width, height, waters, woods, foods, golds = load_config_file(sys.argv[1])
+    filepath = 'config.txt'
+    width, height, waters, woods, foods, golds = load_config_file('config.txt')
     print('Configuration file {} was loaded.'.format(filepath))
 
     #initialize game
