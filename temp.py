@@ -221,9 +221,11 @@ class player:
         print()
 
     def check_resource(self):
-        if (self.wood>0 or self.food>0) or (self.wood>0 or self.gold>0) or (self.food>0 or self.gold>0) or (self.wood>0 or self.food>0 or self.gold>0):
+        if (self.wood == 0 or self.food == 0) or (self.wood == 0 or self.gold == 0) or (self.food == 0 or self.gold == 0) or (self.wood == 0 or self.food == 0 or self.gold == 0):
+            print()
             return True
         else:
+            print()
             print("No resources to recruit any armies.")
             return False
 
@@ -1575,25 +1577,27 @@ if __name__ == "__main__":
     print()
 
     while True:
-        game.print_year()
 
     #player 1 recruit army
+        game.print_year()
         player1.print_recruit_turn()
-        player1.print_resource()
-
-        while player1.check_resource() == True:
+        while True:
             player1.print_resource()
-            if player1.home_sweep() == True:
-                unit = player1.purchase_unit()
-                if unit == None:
-                    break
-                else:
-                    unit_name = player1.resolve_unit_name()
-                    player1.unit_placement()
 
-                    print()
-                    print("You has recruited a {}.".format(unit_name))
-                    print()
+            if player1.check_resource() == True:
+                if player1.home_sweep() == True:
+                    unit = player1.purchase_unit()
+                    if unit == None:
+                        break
+                    else:
+                        unit_name = player1.resolve_unit_name()
+                        player1.unit_placement()
+
+                        print()
+                        print("You has recruited a {}.".format(unit_name))
+                        print()
+                else:
+                    break
             else:
                 break
 
@@ -1620,24 +1624,28 @@ if __name__ == "__main__":
         player1.resolve_coordinates()
 
     #player 2 recruit army
+        game.print_year()
         player2.print_recruit_turn()
-        player2.print_resource()
+        while True:
+            player2.print_resource()
 
-        while player2.check_resource() == True:
-            if player2.home_sweep() == True:
+            if player2.check_resource() == True:
+                if player2.home_sweep() == True:
 
-                unit = player2.purchase_unit()
-                if unit == None:
-                    break
+                    unit = player2.purchase_unit()
+                    if unit == None:
+                        break
+                    else:
+                        unit_name = player2.resolve_unit_name()
+                        player2.unit_placement()
+
+                        print()
+                        print("You has recruited a {}.".format(unit_name))
+                        print()
+
+                        player2.print_resource()
                 else:
-                    unit_name = player2.resolve_unit_name()
-                    player2.unit_placement()
-
-                    print()
-                    print("You has recruited a {}.".format(unit_name))
-                    print()
-
-                    player2.print_resource()
+                    break
             else:
                 break
 
