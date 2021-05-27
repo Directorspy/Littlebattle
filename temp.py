@@ -422,10 +422,8 @@ class player:
                 return
             elif movement_input == 'DIS':
                 game.print_map()
-                print()
             elif movement_input == 'PRIS':
                 game.print_prices()
-                print()
             elif movement_input == 'QUIT':
                 exit()
             else:
@@ -874,7 +872,7 @@ class player:
                 self.self_scout_death()
             elif tile == 'GG':
                 self.gold += 2
-                print("Good. We collected 2 Gold")
+                print("Good. We collected 2 Gold.")
                 game.map[desired_coords[0]][(desired_coords[1]+1)] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -909,7 +907,7 @@ class player:
 
             elif tile == 'FF':
                 self.food += 2
-                print("Good. We collected 2 Food")
+                print("Good. We collected 2 Food.")
                 game.map[desired_coords[0]][(desired_coords[1]+1)] = '  '
                 tile = game.map[desired_coords[0]][desired_coords[1]]
                 if tile == '~~':
@@ -943,7 +941,7 @@ class player:
 
             elif tile == 'WW':
                 self.wood += 2
-                print("Good. We collected 2 Wood")
+                print("Good. We collected 2 Wood.")
                 game.map[desired_coords[0]][(desired_coords[1]+1)] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1029,7 +1027,7 @@ class player:
                 self.self_scout_death()
             elif tile == 'GG':
                 self.gold += 2
-                print("Good. We collected 2 Gold")
+                print("Good. We collected 2 Gold.")
                 game.map[desired_coords[0]][(desired_coords[1]-1)] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1099,7 +1097,7 @@ class player:
 
             elif tile == 'WW':
                 self.wood += 2
-                print("Good. We collected 2 Wood")
+                print("Good. We collected 2 Wood.")
                 game.map[desired_coords[0]][(desired_coords[1]-1)] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1365,7 +1363,7 @@ class player:
                 elif tile == 'WW':
                     self.wood += 2
                     self.scout_output()
-                    print("Good. We collected 2 Wood")
+                    print("Good. We collected 2 Wood.")
                 else:
                     if 'S' in tile or 'A' in tile or 'K' in tile:
                         print("We lost the army {} due to your command!".format(unit_name))
@@ -1381,7 +1379,7 @@ class player:
 
             elif tile == 'FF':
                 self.food += 2
-                print("Good. We collected 2 Food")
+                print("Good. We collected 2 Food.")
                 game.map[(desired_coords[0]-1)][desired_coords[1]] = '  '
 
                 tile = game.map[desired_coords[0]][desired_coords[1]]
@@ -1600,6 +1598,7 @@ if __name__ == "__main__":
     #player 1 move army
         player1.copy_to_post()
         player1.print_move_turn()
+        print()
 
         while player1.check_armies() == True:
             coords = player1.unit_movement_input()
@@ -1639,7 +1638,6 @@ if __name__ == "__main__":
                         print("You has recruited a {}.".format(unit_name))
                         print()
 
-                        player2.print_resource()
                 else:
                     break
             else:
@@ -1648,6 +1646,7 @@ if __name__ == "__main__":
     #player 2 move army
         player2.copy_to_post()
         player2.print_move_turn()
+        print()
 
         while player2.check_armies() == True:
             coords = player2.unit_movement_input()
